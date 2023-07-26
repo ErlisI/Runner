@@ -15,9 +15,9 @@ Create pitch presentation based on first 5 deliverables in project proposal docs
 Start the GitHub project board and populate it with deliverables & deadlines, and link documents from Google Drive folder
 # Day 3 - Project Pitches & Proposal Part 1
 
-5-minute pitch presentations
-Receive feedback from PMs and peers
-Submit finalized pitch deck by EOD
+- 5-minute pitch presentations
+- Receive feedback from PMs and peers
+- Submit finalized pitch deck by EOD
 # Day 4- Project Proposal Part 2
 Create a database schema diagram as a PDF or image file to the shared Google Drive folder for your team. Schema should show all planned tables, columns, and relationships.
 
@@ -29,7 +29,7 @@ Create a database schema diagram as a PDF or image file to the shared Google Dri
 
 - Start sketching wireframes on paper or a whiteboard. Take pictures to submit later.
 
-Day 5 Project Proposal Part 3
+# Day 5 Project Proposal Part 3
 - Submit pictures of hand sketched wireframes to shared folder. Should show main app pages/screens.
 
 - Conduct standup meeting and update kanban board.
@@ -44,7 +44,7 @@ Day 5 Project Proposal Part 3
 
 We will review all documents submitted and provide feedback by the next morning. Let us know if you need any clarification or have additional questions!
 
-Day 6- Project Proposal Due - User Stories
+# Day 6- Project Proposal Due - User Stories
 Breakdown MVP into user stories
 Write story descriptions (on Kanban board)
 Estimate story points
