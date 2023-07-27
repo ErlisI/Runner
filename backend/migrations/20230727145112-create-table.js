@@ -12,6 +12,14 @@ module.exports = {
       tablenumber: {
         type: Sequelize.INTEGER
       },
+      RestaurantId:{
+        type: Sequelize.INTEGER,
+        reference:{
+        modle:"users",
+        key:"id",
+      },onUpdate:"CASCADE",
+       onDelete:"SET NULL"
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
