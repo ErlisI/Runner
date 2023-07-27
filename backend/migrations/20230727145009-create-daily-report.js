@@ -9,6 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      RestaurantId:{
+        type:Sequelize.INTEGER,
+        reference:{
+        modle:"users",
+        key:"id",
+      },onUpdate:"CASCADE",
+       onDelete:"SET NULL"
+      },
       date: {
         type: Sequelize.DATE
       },
