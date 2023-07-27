@@ -9,16 +9,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      tablenumber: {
-        type: Sequelize.INTEGER
-      },
       RestaurantId:{
-        type: Sequelize.INTEGER,
-        reference:{
+        type:Sequelize.INTEGER,
+        allowNull:false,
+        references:{
         modle:"restaurants",
         key:"id",
       },onUpdate:"CASCADE",
        onDelete:"SET NULL"
+      },
+      tablenumber: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
