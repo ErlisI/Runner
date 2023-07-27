@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Restaurant),
+      this.belongsTo(models.Restaurant),
       this.hasMany(models.Party_Order),
       
     }
