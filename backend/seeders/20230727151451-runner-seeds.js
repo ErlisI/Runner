@@ -20,7 +20,6 @@ module.exports = {
     const restaurants = await queryInterface.sequelize.query(`SELECT id FROM restaurants`);
 
     const rId = restaurants[0][0].id;
-
   },
 
   async down (queryInterface, Sequelize) {
