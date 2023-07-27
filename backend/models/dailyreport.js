@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.PartyFood);
       this.belongsTo(models.Restaurant);
     }
+    
   }
   DailyReport.init({
     date: DataTypes.DATE,
