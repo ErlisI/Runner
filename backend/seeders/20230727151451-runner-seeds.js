@@ -21,6 +21,8 @@ module.exports = {
     await queryInterface.bulkInsert("table",
     [{
       tablenumber:5,
+      createdAt:new Date(),
+      updatedAt:new Date(),
     },],)
   },
 
