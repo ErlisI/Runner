@@ -17,7 +17,7 @@ module.exports = {
       
       },],{}
     );
-    const DailyReportID=queryInterface.sequelize.query(`SELETE id FROM dayily_report`);
+    const DailyReportID=queryInterface.sequelize.query(`SELETE id FROM dayilyreports`);
     await queryInterface.bulkInsert("tables",
     [{
       tablenumber:5,
