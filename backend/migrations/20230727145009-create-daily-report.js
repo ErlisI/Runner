@@ -12,7 +12,7 @@ module.exports = {
       RestaurantId:{
         type:Sequelize.INTEGER,
         reference:{
-        modle:"users",
+        modle:"restaurants",
         key:"id",
       },onUpdate:"CASCADE",
        onDelete:"SET NULL"
