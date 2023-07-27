@@ -14,12 +14,19 @@ module.exports = {
         net:1000,
       createdAt:new Date(),
       updatedAt:new Date(),
+      
       },],{}
     );
-    const DailyReportID=const queryInterface.sequelize.query(`SELETE id FROM dayily_report`);
+    const DailyReportID=queryInterface.sequelize.query(`SELETE id FROM dayily_report`);
+    await queryInterface.bulkInsert("table",
+    [{
+      tablenumber:5,
+    },],)
   },
 
   async down (queryInterface, Sequelize) {
-    
+    await queryInterface.bulkDelete("dailyreport",null,{});
+    await queryInterface.bulkDelete("table",null,{})
+
   }
 };
