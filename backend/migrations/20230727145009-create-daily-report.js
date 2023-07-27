@@ -11,8 +11,8 @@ module.exports = {
       },
       RestaurantId:{
         type:Sequelize.INTEGER,
-        reference:{
-        modle:"users",
+        references:{
+        modle:"restaurants",
         key:"id",
       },onUpdate:"CASCADE",
        onDelete:"SET NULL"

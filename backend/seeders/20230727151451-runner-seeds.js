@@ -6,7 +6,7 @@ const dailyreport = require('../models/dailyreport');
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "daily_report",
+      "dailyreports",
       [{
         date:1-1-2001,
         ecost: 3000,
@@ -18,7 +18,7 @@ module.exports = {
       },],{}
     );
     const DailyReportID=queryInterface.sequelize.query(`SELETE id FROM dayily_report`);
-    await queryInterface.bulkInsert("table",
+    await queryInterface.bulkInsert("tables",
     [{
       tablenumber:5,
       createdAt:new Date(),
@@ -27,8 +27,8 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("dailyreport",null,{});
-    await queryInterface.bulkDelete("table",null,{})
+    await queryInterface.bulkDelete("dailyreports",null,{});
+    await queryInterface.bulkDelete("tables",null,{})
 
   }
 };
