@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
   class Food extends Model {
     static associate(models) {
       this.belongsTo(models.FoodCategory),
-      this.belongsToMany(models.Party_Order, {
-        through: "Order_Food",
-      });
+        this.belongsToMany(models.Party_Order, {
+          through: "Order_Food",
+        });
     }
   }
   Food.init({

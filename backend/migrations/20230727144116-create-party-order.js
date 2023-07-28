@@ -9,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      FoodId: {
-        type: Sequelize.INTEGER
-      },
       Total: {
         type: Sequelize.INTEGER
       },
