@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasOne(models.DailyReport);
-      this.hasOne(models.FoodCategory);
-      this.hasMany(models.Table);
+      this.hasMany(models.FoodCategory);
+      this.hasMany(models.rTable);
     }
   }
   Restaurant.init({
