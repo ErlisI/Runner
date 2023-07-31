@@ -9,17 +9,15 @@ module.exports = {
       [
         {
           username: "erlis",
+          rName :"sss",
           email: "erlis@erlis.com",
           password: await bcrypt.hash("password", 10),
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         },
       ],
       {}
     );
-    const restaurants = await queryInterface.sequelize.query(`SELECT id FROM restaurants`);
-
-    const rId = restaurants[0][0].id;
   },
 
   async down (queryInterface, Sequelize) {

@@ -10,20 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
       this.belongsTo(models.Restaurant);
     }
-    
   }
   DailyReport.init({
+    rId: DataTypes.INTEGER,
     date: DataTypes.DATE,
-    ecost: DataTypes.INTEGER,
-    scost: DataTypes.INTEGER,
-    net: DataTypes.INTEGER
+    eCost: DataTypes.INTEGER,
+    sCost: DataTypes.INTEGER,
+    netProfit: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'DailyReport',
-    tableName: 'daily_reports',
+    tableName: 'dailyReports'
   });
   return DailyReport;
 };
