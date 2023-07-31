@@ -10,7 +10,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       rId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "restaurants",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       date: {
         type: Sequelize.DATE

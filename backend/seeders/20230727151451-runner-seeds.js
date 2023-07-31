@@ -18,7 +18,6 @@ module.exports = {
       {}
     );
     const restaurants = await queryInterface.sequelize.query(`SELECT id FROM restaurants`);
-
     const restaurantId = restaurants[0][0].id;
 
     await queryInterface.bulkInsert(
@@ -27,6 +26,20 @@ module.exports = {
         {
           type: "Appetizer",
           rId: restaurantId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      {}
+    );
+
+    await queryInterface.bulkInsert(
+      "foods",
+      [
+        {
+          name: "Pizza",
+          price: 20,
+          CategoryId: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

@@ -9,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      FoodId: {
-        type: Sequelize.INTEGER
-      },
       Total: {
         type: Sequelize.INTEGER
       },
@@ -22,7 +19,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "tables",
+          model: "rTables",
           key: "id",
         },
         onUpdate: "CASCADE",
