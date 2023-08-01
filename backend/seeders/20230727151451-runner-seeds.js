@@ -9,6 +9,7 @@ module.exports = {
       [
         {
           username: "erlis",
+          rName: 'name',
           email: "erlis@erlis.com",
           password: await bcrypt.hash("password", 10),
           createdAt: new Date(),
@@ -21,11 +22,11 @@ module.exports = {
     const restaurantId = restaurants[0][0].id;
 
     await queryInterface.bulkInsert(
-      "foodCategories",
+      "rTables",
       [
         {
-          type: "Appetizer",
-          rId: restaurantId,
+          tableNum: 1,
+          RestaurantId: restaurantId,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -34,12 +35,28 @@ module.exports = {
     );
 
     await queryInterface.bulkInsert(
+      "foodcategories",
+      [
+        {
+          type: "Appetizer",
+          RestaurantId: restaurantId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      {}
+    );
+    
+    const foodcategories = await queryInterface.sequelize.query(`SELECT id FROM foodcategories`);
+    const foodCategoryId = foodcategories[0][0].id;
+    
+    await queryInterface.bulkInsert(
       "foods",
       [
         {
           name: "Pizza",
           price: 20,
-          CategoryId: 1,
+          FoodCategoryId: foodCategoryId,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -49,6 +66,9 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("foods", null, {});
+    await queryInterface.bulkDelete("foodcategories", null, {});
+    await queryInterface.bulkDelete("rTables", null, {});
     await queryInterface.bulkDelete("restaurants", null, {});
   }
 };
