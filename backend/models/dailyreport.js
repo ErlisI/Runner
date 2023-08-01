@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DailyReport.init({
-    rId: DataTypes.INTEGER,
+    RestaurantId: DataTypes.INTEGER,
     date: DataTypes.DATE,
     eCost: DataTypes.INTEGER,
     sCost: DataTypes.INTEGER,

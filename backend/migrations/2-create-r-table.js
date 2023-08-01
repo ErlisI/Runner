@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      rId: {
+      RestaurantId: {
         type: Sequelize.INTEGER,
         references: {
           model: "restaurants",

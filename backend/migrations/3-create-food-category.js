@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('foodCategories', {
+    await queryInterface.createTable('foodcategories', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      rId: {
+      RestaurantId: {
         type: Sequelize.INTEGER,
         references: {
           model: "restaurants",
@@ -33,6 +33,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('foodCategories');
+    await queryInterface.dropTable('foodcategories');
   }
 };

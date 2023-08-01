@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Food.init({
-    CategoryId: {
+    FoodCategoryId: {
       allowNull: false,
       type: DataTypes.INTEGER
     },

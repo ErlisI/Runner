@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      CategoryId: {
+      FoodCategoryId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "foodCategories",
+          model: "foodcategories",
           key: "id",
         },
         onUpdate: "CASCADE",
