@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 export default function Navbar() {
-    const [realTime, setRealTime] = useState(null);
+    const [realTime, setRealTime] = useState(Date.now());
     function getRealTime() {
         const currentTime = Date.now();
         //console.log(new Date(Math.round(currentTime / 1000) * 1000), currentTime);

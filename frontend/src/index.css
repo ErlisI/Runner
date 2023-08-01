@@ -3,3 +3,12 @@
 @import "tailwindcss/components";
 
 @import "tailwindcss/utilities";
+
+#error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size:xx-large;
+  }
