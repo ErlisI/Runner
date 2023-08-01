@@ -9,8 +9,9 @@ router.get("/current_user", async (req, res) => {
     return res.status(200).json({
       user: {
         id: rUser.id,
+        userName: rUser.username,
         email: rUser.email,
-        name: rUser.name
+        name: rUser.rName
       }
     });
   } else {
@@ -23,7 +24,8 @@ router.post("/signup", async (req, res) => {
 
   try {
     const rUser = await Restaurant.create({
-      name: req.body.name,
+      userName: req.body.username,
+      rName: req.body.name,
       email: req.body.email,
       password: hashedPassword,
     });
@@ -33,7 +35,7 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({
       message: "Restaurant User created!",
       user: {
-        name: rUser.name,
+        userName: rUser.username,
         email: rUser.email,
       },
     });
@@ -60,6 +62,7 @@ router.delete("/logout", (req, res) => {
   });
 });
 
+
 router.post("/login", async (req, res) => {
   try {
     console.log("body", req.body);
@@ -82,7 +85,7 @@ router.post("/login", async (req, res) => {
         res.status(200).json({
           message: "Logged in successfully",
           user: {
-            name: rUser.name,
+            userName: rUser.username,
             email: rUser.email,
           },
         });

@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER
     },
-    rId: DataTypes.INTEGER
+    RestaurantId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'rTable',
