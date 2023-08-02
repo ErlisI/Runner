@@ -1,9 +1,38 @@
 import { useState } from "react";
-import Form from './SignupForm';
+import { Form, redirect, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import Forms from './SignupForm';
 import SignUpModal from "./modal";
+
+export async function action({ request }) {
+    const formData = await request.formData();
+  
+    console.log(Object.fromEntries(formData));
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    });
+  
+    if (!response.ok) {
+      // invalid credentials, remain on login page
+      return null;
+    }
+}
+
+
 
 export default function LoginForm(){
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const { currentUser } = useContext(AuthContext);
+    if (currentUser) {
+      return <Navigate to="/" />;
+    }
+
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -12,13 +41,16 @@ export default function LoginForm(){
       const hideModal = () => {
         setIsModalVisible(false);
       }
+
     return(
         <div>
-        <form className=" flex flex-col gap-2 text-center ">
+        <Form className=" flex flex-col gap-2 text-center ">
             <fieldset className="flex flex-col  ">
             <label htmlFor="title">Username</label>
             <input
-              id="Username"
+              type="username"
+              name="username"
+             id="username"
               className="bg-white border-4 focus:outline-none p-2"
             />
           </fieldset>
@@ -27,19 +59,20 @@ export default function LoginForm(){
             <label htmlFor="title">Password</label>
             <input
               type="password"
-              id="Username"
+              name="password"
+              id="password"
               className="bg-white border-4 focus:outline-none p-2"
             />
           </fieldset>
           <button className="bg-gray-300 hover:bg-gray-400 text-white font-bold py-2 px-4 mt-4 rounded-full">
             Login
           </button>
-        </form>
+        </Form>
         <SignUpModal
         isVisible={isModalVisible}
         hideModal={hideModal}
       >
-        <Form hModal={hideModal}  />
+        <Forms hModal={hideModal}  />
       </SignUpModal>
 
         <p className="mt-4 text-center"> Dont have an account yet? <button className="text-red-500" onClick={showModal}>Sign Up</button> </p> 
