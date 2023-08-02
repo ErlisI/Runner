@@ -19,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type:DataTypes.STRING,
     },
-    rId: DataTypes.INTEGER
+    RestaurantId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'FoodCategory',
-    tableName: 'foodCategories',
+    tableName: 'foodcategories',
   });
   return FoodCategory;
 };

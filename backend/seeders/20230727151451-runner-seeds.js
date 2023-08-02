@@ -9,7 +9,6 @@ module.exports = {
       [
         {
           username: "erlis",
-          rName :"sss",
           email: "erlis@erlis.com",
           password: await bcrypt.hash("password", 10),
           createdAt: new Date(),
@@ -18,9 +17,15 @@ module.exports = {
       ],
       {}
     );
+    const restaurants = await queryInterface.sequelize.query(`SELECT id FROM restaurants`);
+
+    const rId = restaurants[0][0].id;
   },
 
   async down (queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("foods", null, {});
+    await queryInterface.bulkDelete("foodcategories", null, {});
+    await queryInterface.bulkDelete("rTables", null, {});
     await queryInterface.bulkDelete("restaurants", null, {});
   }
 };
