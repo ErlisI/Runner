@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Form, redirect, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import Forms from './SignupForm';
-import SignUpModal from "./modal";
+
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function action({ request }) {
@@ -44,8 +43,15 @@ export default function LoginForm() {
   }
 
   return (
+    <div className="flex flex-col items-center h-screen bg-[#f1f1f1]">
+      <img
+        className="mt-8"
+        src="https://cdn.discordapp.com/attachments/669304891662925855/1133077409630007326/image.png"
+        alt="Runner Logo"
+      />
+      <div className="mt-4 w-96"></div>
     <div>
-      <Form method="post" className=" flex flex-col gap-2 text-center ">
+      <Form method="post" className=" flex flex-col gap-2 w-96 text-center ">
         <fieldset className="flex flex-col  ">
           <label htmlFor="title">Email</label>
           <input
@@ -69,15 +75,9 @@ export default function LoginForm() {
           Login
         </button>
       </Form>
-      <SignUpModal
-        isVisible={isModalVisible}
-        hideModal={hideModal}
-      >
-        <Forms hModal={hideModal} />
-      </SignUpModal>
-
-      <p className="mt-4 text-center"> Dont have an account yet? <button className="text-red-500" onClick={showModal}>Sign Up</button> </p>
-
+      <p className="mt-4 text-center"> Dont have an account yet? <button className="text-red-500" >Sign Up</button> </p>
     </div>
+    </div>
+
   )
 }
