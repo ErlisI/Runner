@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import Form from './SignupForm';
 import SignUpModal from "./modal";
 
@@ -31,7 +31,7 @@ export default function LoginForm(){
               className="bg-white border-4 focus:outline-none p-2"
             />
           </fieldset>
-          <button class="bg-gray-300 hover:bg-gray-400 text-white font-bold py-2 px-4 mt-4 rounded-full">
+          <button className="bg-gray-300 hover:bg-gray-400 text-white font-bold py-2 px-4 mt-4 rounded-full">
             Login
           </button>
         </form>

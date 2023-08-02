@@ -9,8 +9,6 @@ export default function First() {
     >
         <img className="h-40 mx-10" src="https://cdn.discordapp.com/attachments/669304891662925855/1133077409630007326/image.png" alt="Runner Logo"
         ></img>
-        
-    
     </nav>
     )
   }
