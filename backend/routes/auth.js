@@ -9,7 +9,7 @@ router.get("/current_user", async (req, res) => {
     return res.status(200).json({
       user: {
         id: rUser.id,
-        userName: rUser.username,
+        username: rUser.username,
         email: rUser.email,
         name: rUser.rName
       }
