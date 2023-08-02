@@ -38,7 +38,7 @@ export default function Navbar() {
 
       <div className="flex flex-col items-center justify-center mx-10 text-lg">
         <button className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mt-4 rounded-full border border-red-600">
-          Login
+          Logout
         </button>
 
         <div className="mt-4">

@@ -6,7 +6,7 @@ import AuthContext from "../context/AuthContext";
 export async function action({ request }) {
   const formData = await request.formData();
 
-  const response = await fetch("/auth/signup", {
+  const response = await fetch("http://localhost:4000/api/auth/login", {
     method: "POST",
     body: JSON.stringify(formData),
   });

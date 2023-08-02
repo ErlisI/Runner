@@ -2,10 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/root";
-import Login from "./routes/loginpage";
+import Login, { action as loginAction } from "./assets/LoginForm";
+//import Signup, { action as signupAction } from "./assets/SignupForm";
 import ErrorPage from "./ErrorPage.jsx";
-
-import './index.css'
+import AuthProvider from "./context/AuthContext";
+import './index.css';
 
 
 const router = createBrowserRouter([
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Login />,
     errorElement: <ErrorPage />,
+    action: loginAction,
   },
   {
     path: "/User",
@@ -24,6 +26,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
