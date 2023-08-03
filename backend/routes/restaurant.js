@@ -58,7 +58,7 @@ const handleErrors = (err, res) => {
 // ---------- rTable ---------- //
 
 // Get all the tables
-router.get("/rTables", authenticateUser, async (req, res) => {
+router.get("/rTables", async (req, res) => {
     try {
         const allTables = await rTable.findAll();
 
@@ -86,7 +86,7 @@ router.get("/rTables/:id", authenticateUser, async (req, res) => {
 });
 
 // Create a new table
-router.post("/rTables", authenticateUser, async (req, res) => {
+router.post("/rTables", async (req, res) => {
     const { tableNum } = req.body;
 
     try {

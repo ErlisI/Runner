@@ -13,7 +13,7 @@ const {
 
 app.use(
   cors({
-    origin: "http://127.0.0.1:5173",
+    origin: "*",
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
   })

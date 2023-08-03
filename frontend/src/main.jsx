@@ -4,8 +4,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/root";
 import Login from "./routes/loginpage";
 import ErrorPage from "./ErrorPage.jsx";
-
-import './index.css'
+import {loader as l} from "./first";
+import Addtable,{action as addtableaction} from "./addtable"
+import './index.css';
 
 
 const router = createBrowserRouter([
@@ -16,9 +17,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/User",
+    loader: l,
     element: <Root />,
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/User/addtable",
+    element: <Addtable />,
+    action: addtableaction,
+  }
 ]);
 
 
