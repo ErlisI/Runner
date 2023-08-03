@@ -20,12 +20,18 @@ router.get("/current_user", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+
+  
+  console.log("Request Body:", req.body);
+
+  
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
   try {
+    
     const rUser = await Restaurant.create({
-      userName: req.body.username,
-      rName: req.body.name,
+      username: req.body.username,
+      rName: req.body.rName,
       email: req.body.email,
       password: hashedPassword,
     });

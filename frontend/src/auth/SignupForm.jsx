@@ -5,16 +5,20 @@ import { AuthContext } from "../context/AuthContext";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function action({ request }) {
+  
   const formData = await request.formData();
   const response = await fetch("http://localhost:4000/api/auth/signup", {
     method: "POST",
-    body: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
   });
   if (!response.ok) {
     // invalid submission, remain on signup page
     return null;
   }
-  return redirect("/user");
+  return redirect("/");
 }
 
 
@@ -39,29 +43,36 @@ export default function SignupForm() {
         <fieldset className="flex flex-col ">
           <label htmlFor="username">Username</label>
           <input
-            id="Username"
+            id="username"
+            type="text"
+            name="username"
             className="bg-white border-4 focus:outline-none p-2"
           />
         </fieldset>
         <fieldset className="flex flex-col  ">
-          <label htmlFor="rname">Restauran Name</label>
+          <label htmlFor="rName">Restauran Name</label>
           <input
-            id="Rname"
+            id="rName"
+            type="text"
+            name="rName"
             className="bg-white border-4 focus:outline-none p-2"
           />
         </fieldset>
         <fieldset className="flex flex-col  ">
           <label htmlFor="email">Email</label>
           <input
-            id="Rname"
+           type="email"
+           name="email"
+           id="email"
             className="bg-white border-4 focus:outline-none p-2"
           />
         </fieldset>
         <fieldset className="flex flex-col  ">
-          <label htmlFor="title">Password</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
-            id="Username"
+            id="password"
+            name="password"
             className="bg-white border-4 focus:outline-none p-2"
           />
         </fieldset>
