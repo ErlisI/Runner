@@ -10,10 +10,8 @@ import {
 import { AuthContext } from "../context/AuthContext";
 
 export async function loader({ request }) {
-  const response = await fetch("http://localhost:4000/api/auth/current_user", {
-    credentials: "include",
-  });
-  console.log(response.ok);
+  const response = await fetch("/api/auth/current_user");
+  
   if (response.ok) {
     const { user } = await response.json();
     return { currentUser: user };
@@ -22,6 +20,7 @@ export async function loader({ request }) {
 }
 
 function Root() {
+    
   const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
@@ -31,7 +30,7 @@ function Root() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:4000/api/auth/logout", {
+    const response = await fetch("/api/auth/logout", {
       method: "DELETE",
     });
     if (response.ok) {
