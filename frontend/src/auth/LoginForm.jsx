@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Form, redirect, Navigate } from "react-router-dom";
+import { Form, useNavigate,redirect, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
@@ -26,21 +25,20 @@ export async function action({ request }) {
 }
 
 
+
 export default function LoginForm() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
   if (currentUser) {
     return <Navigate to="/user" />;
   }
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const handleClick = (e) => {
+    navigate("/signup");
   }
+  
 
-  const hideModal = () => {
-    setIsModalVisible(false);
-  }
 
   return (
     <div className="flex flex-col items-center h-screen bg-[#f1f1f1]">
@@ -75,7 +73,7 @@ export default function LoginForm() {
           Login
         </button>
       </Form>
-      <p className="mt-4 text-center"> Dont have an account yet? <button className="text-red-500" >Sign Up</button> </p>
+      <p className="mt-4 text-center"> Dont have an account yet?   <button className="text-red-500" onClick={handleClick}>Sign Up</button> </p>
     </div>
     </div>
 

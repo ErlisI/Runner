@@ -17,6 +17,7 @@ app.use(
     origin: "http://localhost:5173",
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
   })
 );
 
@@ -43,12 +44,11 @@ app.use(
 );
 
 app.use(forbiddenErrorHandler);
-app.use(notFoundErrorHandler); 
+app.use(notFoundErrorHandler);
 
 // routes
 app.use("/api/auth", authRouter);
 app.use("/api/restaurant", restaurantRouter);
-
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
