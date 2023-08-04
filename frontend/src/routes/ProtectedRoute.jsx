@@ -6,8 +6,6 @@ import PropTypes from "prop-types";
 export default function ProtectedRoute({ children }) {
   const { currentUser } = useContext(AuthContext);
 
-  // console.log(cur)
-
   if (!currentUser) {
     return <Navigate to="/login" />;
   }

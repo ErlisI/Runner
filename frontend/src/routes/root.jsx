@@ -1,8 +1,6 @@
 // import React from 'react';
 import { useEffect, useContext, useState } from "react";
 import {
-  //Link,
-  //Outlet,
   useNavigation,
   useLoaderData,
   Form,
@@ -29,6 +27,7 @@ function Root() {
   const navigation = useNavigation();
   useEffect(() => {
     setCurrentUser(currentUser);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const handleLogout = async (e) => {
@@ -37,8 +36,8 @@ function Root() {
       method: "DELETE",
     });
     if (response.ok) {
-      setCurrentUser(null); // Update the current user context or state accordingly
-      navigation.navigate("/login"); // Redirect to the login page after logout
+      setCurrentUser(null);
+      navigation.navigate("/login");
     }
   };
   /////////////////////////////////////////////// Nav bar stuff/////////////////
@@ -74,8 +73,7 @@ function Root() {
   }, []);
 
   return (
-    <div className="h-screen">
-    
+    <div>
       <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
         <img
           className="h-40 mx-10"
