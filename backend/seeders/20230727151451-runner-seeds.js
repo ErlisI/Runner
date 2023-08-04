@@ -30,6 +30,18 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          tableNum: 2,
+          RestaurantId: restaurantId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          tableNum: 3,
+          RestaurantId: restaurantId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       {}
     );
