@@ -2,6 +2,7 @@ import { useState, createContext, useEffect } from "react";
 export const AuthContext = createContext();
 
 // AuthProvider.js
+// eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthChecked, setIsAuthChecked] = useState(false);

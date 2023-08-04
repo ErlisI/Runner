@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   Party_Order.init({
     Total: DataTypes.INTEGER,
     open: DataTypes.BOOLEAN,
-    TableId: DataTypes.INTEGER,
+    rTableId: DataTypes.INTEGER,
     date: DataTypes.DATE
   }, {
     sequelize,
