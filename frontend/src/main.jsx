@@ -40,30 +40,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-//   {
-//     path: "/login",
-//     element: <Login />,
-//     errorElement: <ErrorPage />,
-//     action: loginAction,
-//   },
-//   {
-//     path: "/signup",
-//     element: <SignUp />,
-//     errorElement: <ErrorPage />,
-//     action: signUpAction,
-//   },
-//   {
-//     path: "/User",
-//     element: (
-//       <ProtectedRoute>
-//         <Root />
-//       </ProtectedRoute>
-//     ),
-//     errorElement: <ErrorPage />,
-//     loader: rootLoader,
-//   },
-// ]);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
