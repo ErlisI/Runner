@@ -148,7 +148,7 @@ router.post("/rTables", authenticateUser, async (req, res) => {
         let nextTableNum = 1;
 
         if (maxTableNumRecord) {
-            
+
             // Loop through existing table numbers to find the next available one
             for (let i = 1; i <= maxTableNumRecord.tableNum + 1; i++) {
                 const table = await rTable.findOne({
@@ -386,10 +386,10 @@ router.get('/partyOrders/:partyOrderId', async (req, res) => {
 });
 
 
+// Create a new party order
+router.post('/rTables/:id/partyOrders', async (req, res) => {
 
-router.post('/partyOrders', async (req, res) => {
-    //no need for client to add open or the foods when openning a party order
-    const rTableId = 8;
+    const rTableId = req.params.id;
 
     try {
 
@@ -420,45 +420,82 @@ router.post('/partyOrders', async (req, res) => {
 });
 
 
+router.patch('/rTables/:id/partyOrders/:partyOrderId/close', async (req, res) => {
+    const PartyOrderId = req.params.partyOrderId;
+    const rTableId = req.params.id;
+
+    try {
+        const partyOrder = await Party_Order.findOne({
+            where: {
+                id: PartyOrderId,
+                rTableId: rTableId,
+                open: true
+            }
+        });
+
+        if (!partyOrder) {
+            return res.status(404).json({ message: 'Open party order not found for this table' });
+        }
+
+        // Update the 'open' status to false
+        await partyOrder.update({ open: false });
+
+        res.status(200).json({ message: 'Party order closed successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error occurred while closing party order', error: err });
+    }
+});
+
+
 
 // ---------- Order Food ---------- //
 
 router.post('/orderFoods', async (req, res) => {
-    const { FoodId, PartyOrderId, Quantity } = req.body;
+    const orderFoods = req.body.orderFoods;
 
     try {
-        const food = await Food.findByPk(FoodId);
-        if (!food) {
-            return res.status(404).json({ message: 'Food not found' });
+        let totalFoodPrice = 0;
+
+        for (const { FoodId, PartyOrderId, Quantity } of orderFoods) {
+            const food = await Food.findByPk(FoodId);
+            if (!food) {
+                return res.status(404).json({ message: 'Food not found' });
+            }
+
+            // Find the associated Party_Order
+            const partyOrder = await Party_Order.findByPk(PartyOrderId);
+            if (!partyOrder) {
+                return res.status(404).json({ message: 'Party order not found' });
+            }
+
+            // Check if the Party_Order is open
+            if (!partyOrder.open) {
+                return res.status(400).json({ message: 'Cannot create Order_Food for a closed party order' });
+            }
+
+            // Create the new Order_Food
+            const orderFood = await Order_Food.create({
+                FoodId: FoodId,
+                PartyOrderId: PartyOrderId,
+                Quantity: Quantity,
+            });
+
+            // Calculate the price of the added food item
+            const foodPrice = food.price * Quantity;
+            totalFoodPrice += foodPrice;
+
+            // Update the total price in the Party_Order table
+            const newTotal = partyOrder.Total + foodPrice;
+            await partyOrder.update({ Total: newTotal });
         }
 
-        // Create the new Order_Food
-        const orderFood = await Order_Food.create({
-            FoodId: FoodId,
-            PartyOrderId: PartyOrderId,
-            Quantity: Quantity,
-        });
-
-        // Calculate the price of the added food item
-        const foodPrice = food.price * Quantity;
-
-        // Find the associated Party_Order
-        const partyOrder = await Party_Order.findByPk(PartyOrderId);
-        if (!partyOrder) {
-            return res.status(404).json({ message: 'Party order not found' });
-        }
-
-        // Update the total price in the Party_Order table
-        const newTotal = partyOrder.Total + foodPrice;
-        await partyOrder.update({ Total: newTotal });
-
-        res.status(201).json({ message: 'Order food created successfully', orderFood });
+        res.status(201).json({ message: 'Order foods created successfully', totalFoodPrice });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Error occurred while creating order food', error: err });
+        res.status(500).json({ message: 'Error occurred while creating order foods', error: err });
     }
 });
-
 
 
 module.exports = router;
