@@ -104,6 +104,7 @@ router.get("/rTables", authenticateUser, async (req, res) => {
     }
 });
 
+
 // Get a specific table
 router.get("/rTables/:id", authenticateUser, async (req, res) => {
     try {
@@ -113,7 +114,6 @@ router.get("/rTables/:id", authenticateUser, async (req, res) => {
             return res.status(404).send({ message: "Table not found" });
         }
 
-        // Assuming you have the logged-in user's session data available in req.session
         const session = req.session;
 
         try {
@@ -131,24 +131,42 @@ router.get("/rTables/:id", authenticateUser, async (req, res) => {
 
 // Create a new table
 router.post("/rTables", authenticateUser, async (req, res) => {
-    const { tableNum } = req.body;
     const rUser = await Restaurant.findByPk(req.session.userId);
 
     try {
         // Check authorization to create a table for the restaurant
         authorizeRTableGet(req.session, { RestaurantId: rUser.id });
 
-        const existingRecord = await rTable.findOne({
+        // Find the highest existing table number for the restaurant
+        const maxTableNumRecord = await rTable.findOne({
             where: {
-                tableNum: tableNum,
-                RestaurantId: rUser.id, // Ensure the table belongs to the same restaurant
+                RestaurantId: rUser.id,
             },
+            order: [['tableNum', 'DESC']],
         });
-        if (existingRecord)
-            return res.status(409).json({ error: "Table number already exists for this restaurant" });
+
+        let nextTableNum = 1;
+
+        if (maxTableNumRecord) {
+            
+            // Loop through existing table numbers to find the next available one
+            for (let i = 1; i <= maxTableNumRecord.tableNum + 1; i++) {
+                const table = await rTable.findOne({
+                    where: {
+                        RestaurantId: rUser.id,
+                        tableNum: i,
+                    },
+                });
+
+                if (!table) {
+                    nextTableNum = i;
+                    break;
+                }
+            }
+        }
 
         const newTableData = {
-            ...req.body,
+            tableNum: nextTableNum,
             RestaurantId: rUser.id,
         };
 
@@ -159,6 +177,7 @@ router.post("/rTables", authenticateUser, async (req, res) => {
         handleErrors(err, res);
     }
 });
+
 
 
 // Delete a specific table
@@ -182,7 +201,6 @@ router.get("/foodCategories", authenticateUser, async (req, res) => {
     try {
         const allCategories = await FoodCategory.findAll();
 
-        // Assuming you have the logged-in user's session data available in req.session
         const session = req.session;
 
         // Filter the categories based on authorization
@@ -347,7 +365,14 @@ router.get('/partyOrders/:partyOrderId', async (req, res) => {
     const { partyOrderId } = req.params;
 
     try {
-        const partyOrder = await Party_Order.findByPk(partyOrderId);
+        const partyOrder = await Party_Order.findByPk(partyOrderId, {
+            include: [
+                {
+                    model: Food,
+                    attributes: ['price', 'name']
+                }
+            ]
+        });
 
         if (partyOrder) {
             res.status(200).json(partyOrder);
@@ -361,9 +386,10 @@ router.get('/partyOrders/:partyOrderId', async (req, res) => {
 });
 
 
+
 router.post('/partyOrders', async (req, res) => {
-    const { orderFoods, open } = req.body;
-    const rTableId = 1;
+    //no need for client to add open or the foods when openning a party order
+    const rTableId = 8;
 
     try {
 
@@ -378,28 +404,15 @@ router.post('/partyOrders', async (req, res) => {
             return res.status(400).json({ message: 'An open party order already exists for this table' });
         }
 
-        const total = await Promise.all(orderFoods.map(async ({ foodId, quantity }) => {
-            const food = await Food.findByPk(foodId);
-            return food.price * quantity;
-        })).then(prices => prices.reduce((acc, price) => acc + price, 0));
-
         // Create a new party order
         const newPartyOrder = await Party_Order.create({
             date: new Date(),
-            Total: total,
+            Total: 0,
             rTableId: rTableId,
-            open: open,
+            open: true,
         });
 
-        const orderFoodItems = orderFoods.map(({ foodId, quantity }) => ({
-            FoodId: foodId,
-            PartyOrderId: newPartyOrder.id,
-            Quantity: quantity,
-        }));
-
-        await Order_Food.bulkCreate(orderFoodItems);
-
-        res.status(201).json({ message: 'Party order created successfully' });
+        res.status(201).json(newPartyOrder);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error occurred while creating party order', error: err });
