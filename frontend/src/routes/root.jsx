@@ -8,27 +8,27 @@ import {
   Form,
 } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import First from "../threesrctors/first";
 
 // eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
 export async function loader({ request }) {
   const response = await fetch("/api/auth/current_user");
-  
+  const tablesrespond = await fetch("/api/restaurant/rTables");
+  const tables = await tablesrespond.json();
   if (response.ok) {
     const { user } = await response.json();
-    return { currentUser: user };
+    return { currentUser: user, tables };
   }
   return { currentUser: null };
 }
 
 
 function Root() {
-    
   const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
   useEffect(() => {
     setCurrentUser(currentUser);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const handleLogout = async (e) => {
@@ -92,9 +92,18 @@ function Root() {
         </div>
       </nav>
 
-      <div className="grid grid-cols-5 gap-4 m-4 h-screen">
-        {/* <div className="border p-2 rounded col-span-1"><First /></div>
-        <div className="border p-4 rounded col-span-3"><First /></div>
+      <div className="grid grid-cols-6 gap-4 m-4 ">
+        <div className="border w-auto p-2 rounded col-span-1">
+          <First />
+        </div>
+        <div className="border w-auto p-2 rounded col-span-4">
+          <First />
+        </div>
+        <div className="border w-auto p-2 rounded col-span-1">
+          <First />
+        </div>
+
+        {/*<div className="border p-4 rounded col-span-3"><First /></div>
         <div className="border p-2 rounded col-span-1"><First /></div> */}
 
         {/* <Second />
