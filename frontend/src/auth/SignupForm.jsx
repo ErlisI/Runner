@@ -1,29 +1,21 @@
-import { Form, redirect, Navigate } from "react-router-dom";
+import { Link, Form, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-// eslint-disable-next-line react-refresh/only-export-components
-export async function action({ request }) {
-  const formData = await request.formData();
-  const response = await fetch("http://localhost:4000/api/auth/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(Object.fromEntries(formData)),
-  });
-  if (!response.ok) {
-    // invalid submission, remain on signup page
-    return null;
-  }
-  return redirect("/login");
-}
+
 
 export default function SignupForm() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, signup } = useContext(AuthContext);
+  
   if (currentUser) {
     return <Navigate to="/user" />;
   }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const credentials = Object.fromEntries(formData);
+    await signup(credentials);
+  };
 
   return (
     <div className="flex flex-col items-center h-screen bg-[#f1f1f1]">
@@ -37,6 +29,7 @@ export default function SignupForm() {
         <Form
           method="post"
           className=" selection:bg-blue-200 w-96 flex flex-col gap-2 text-center "
+          onSubmit={handleSubmit}
         >
           <fieldset className="flex flex-col ">
             <label htmlFor="username">Username</label>
@@ -79,6 +72,7 @@ export default function SignupForm() {
             Sign Up
           </button>
         </Form>
+        <p className="mt-4 text-center"> Already a member?   <Link to="/login" className="text-red-500" >Login</Link> </p>
       </div>
     </div>
   );

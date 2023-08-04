@@ -1,19 +1,18 @@
 // import React from 'react';
 import { useEffect, useContext, useState } from "react";
 import {
-  Link,
-  Outlet,
+  //Link,
+  //Outlet,
   useNavigation,
   useLoaderData,
   Form,
 } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+// eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
 export async function loader({ request }) {
-  const response = await fetch("http://localhost:4000/api/auth/current_user", {
-    credentials: "include",
-  });
-  console.log(response.ok);
+  const response = await fetch("/api/auth/current_user");
+  
   if (response.ok) {
     const { user } = await response.json();
     return { currentUser: user };
@@ -22,16 +21,18 @@ export async function loader({ request }) {
 }
 
 function Root() {
+    
   const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
   useEffect(() => {
     setCurrentUser(currentUser);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:4000/api/auth/logout", {
+    const response = await fetch("/api/auth/logout", {
       method: "DELETE",
     });
     if (response.ok) {

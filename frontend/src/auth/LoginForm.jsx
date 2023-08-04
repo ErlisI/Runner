@@ -1,43 +1,28 @@
-import { Form, useNavigate,redirect, Navigate } from "react-router-dom";
+import { Form,Link, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 
-// eslint-disable-next-line react-refresh/only-export-components
-export async function action({ request }) {
-  const formData = await request.formData();
-
-  console.log(Object.fromEntries(formData));
-  const response = await fetch("http://localhost:4000/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(Object.fromEntries(formData)),
-  });
-
-  if (!response.ok) {
-    // invalid credentials, remain on login page
-    return null;
-  }
-
-  return redirect("/user");
-}
-
 
 
 export default function LoginForm() {
-  const navigate = useNavigate();
+  const { currentUser, login } = useContext(AuthContext);
+  
 
-  const { currentUser } = useContext(AuthContext);
+  
   if (currentUser) {
     return <Navigate to="/user" />;
   }
 
-  const handleClick = (e) => {
-    navigate("/signup");
-  }
+
   
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const credentials = Object.fromEntries(formData);
+    await login(credentials);
+  }
 
 
   return (
@@ -49,7 +34,7 @@ export default function LoginForm() {
       />
       <div className="mt-4 w-96"></div>
     <div>
-      <Form method="post" className=" flex flex-col gap-2 w-96 text-center ">
+      <Form method="post" className=" flex flex-col gap-2 w-96 text-center "  onSubmit={handleSubmit}>
         <fieldset className="flex flex-col  ">
           <label htmlFor="title">Email</label>
           <input
@@ -73,7 +58,7 @@ export default function LoginForm() {
           Login
         </button>
       </Form>
-      <p className="mt-4 text-center"> Dont have an account yet?   <button className="text-red-500" onClick={handleClick}>Sign Up</button> </p>
+      <p className="mt-4 text-center"> Dont have an account yet?   <Link to="/signup" className="text-red-500" >Sign Up</Link> </p>
     </div>
     </div>
 
