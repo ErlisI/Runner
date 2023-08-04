@@ -1,8 +1,9 @@
 import { useState, createContext, useEffect } from "react";
+import PropTypes from "prop-types";
+
 export const AuthContext = createContext();
 
 // AuthProvider.js
-// eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
@@ -127,3 +128,7 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
