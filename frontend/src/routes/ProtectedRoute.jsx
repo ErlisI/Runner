@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
 export default function ProtectedRoute({ children }) {
   const { currentUser } = useContext(AuthContext);
 
@@ -14,3 +14,7 @@ export default function ProtectedRoute({ children }) {
 
   return children;
 }
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired, // Validate that children is a valid React node
+};
