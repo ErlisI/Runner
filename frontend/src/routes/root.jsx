@@ -1,14 +1,15 @@
 // import React from 'react';
 import { useEffect, useContext, useState } from "react";
 import {
-  Link,
-  Outlet,
+  //Link,
+  //Outlet,
   useNavigation,
   useLoaderData,
   Form,
 } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+// eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
 export async function loader({ request }) {
   const response = await fetch("/api/auth/current_user");
   
@@ -26,6 +27,7 @@ function Root() {
   const navigation = useNavigation();
   useEffect(() => {
     setCurrentUser(currentUser);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const handleLogout = async (e) => {

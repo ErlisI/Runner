@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { authenticateUser } = require("../middleware/auth");
 const { ForbiddenError, NotFoundError } = require("../errors");
-const { rTable, Food, FoodCategory } = require("../models");
+const { Restaurant, rTable, Food, FoodCategory, Party_Order, Order_Food } = require("../models");
 
 const getRTable = async (id) => {
     const table = await rTable.findByPk(parseInt(id, 10));
@@ -88,6 +88,7 @@ router.get("/rTables/:id", authenticateUser, async (req, res) => {
 // Create a new table
 router.post("/rTables", authenticateUser, async (req, res) => {
     const { tableNum } = req.body;
+    const rUser = await Restaurant.findByPk(req.session.userId);
 
     try {
         const existingRecord = await rTable.findOne({
@@ -98,15 +99,18 @@ router.post("/rTables", authenticateUser, async (req, res) => {
         if (existingRecord)
             return res.status(409).json({ error: "Table number already exists" });
 
+        const newTableData = {
+            ...req.body,
+            RestaurantId: rUser.id,
+        };
 
-        const newTable = await rTable.create(req.body);
+        const newTable = await rTable.create(newTableData);
         res.status(201).json(newTable);
 
     } catch (err) {
         handleErrors(err, res);
     }
 });
-
 
 // Delete a specific table
 router.delete("/rTables/:id", authenticateUser, async (req, res) => {
@@ -260,6 +264,80 @@ router.delete("/foodCategories/:catId/foods/:id", authenticateUser, async (req, 
     } catch (err) {
         console.error(err);
         res.status(500).send({ message: err.message });
+    }
+});
+
+
+// ---------- Party Order ---------- //
+
+router.get('/partyOrders/:partyOrderId', async (req, res) => {
+    const { partyOrderId } = req.params;
+
+    try {
+        const partyOrder = await Party_Order.findByPk(partyOrderId);
+
+        if (partyOrder) {
+            res.status(200).json(partyOrder);
+        } else {
+            res.status(404).json({ message: 'Party order not found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error occurred while retrieving party order', error: err });
+    }
+});
+
+
+router.post('/partyOrders', async (req, res) => {
+    const { orderFoods, open } = req.body;
+
+    try {
+        const total = await Promise.all(orderFoods.map(async ({ foodId, quantity }) => {
+            const food = await Food.findByPk(foodId);
+            return food.price * quantity;
+          })).then(prices => prices.reduce((acc, price) => acc + price, 0));
+      
+
+        const newPartyOrder = await Party_Order.create({
+            date: new Date(),
+            Total: total,
+            rTableId: 1,
+            open: open,
+        });
+
+        const orderFoodItems = orderFoods.map(({ foodId, quantity }) => ({
+            FoodId: foodId,
+            PartyOrderId: newPartyOrder.id,
+            Quantity: quantity,
+        }));
+
+        await Order_Food.bulkCreate(orderFoodItems);
+
+        res.status(201).json({ message: 'Party order created successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error occurred while creating party order', error: err });
+    }
+});
+
+
+
+// ---------- Order Food ---------- //
+
+router.post('/orderFoods', async (req, res) => {
+    const { FoodId, PartyOrderId, Quantity } = req.body;
+
+    try {
+        const orderFood = await Order_Food.create({
+            FoodId: FoodId,
+            PartyOrderId: PartyOrderId,
+            Quantity: Quantity,
+        });
+
+        res.status(201).json({ message: 'Order food created successfully', orderFood });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error occurred while creating order food', error: err });
     }
 });
 

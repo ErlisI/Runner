@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 
 
 export default function LoginForm() {
-  const { currentUser, login, authError } = useContext(AuthContext);
+  const { currentUser, login } = useContext(AuthContext);
   
 
   

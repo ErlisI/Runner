@@ -15,11 +15,11 @@ module.exports = {
       open: {
         type: Sequelize.BOOLEAN
       },
-      TableId: {
+      rTableId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "rTables",
+          model: "rtables",
           key: "id",
         },
         onUpdate: "CASCADE",

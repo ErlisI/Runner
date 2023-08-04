@@ -1,11 +1,11 @@
-import { Form, redirect, Navigate } from "react-router-dom";
+import { Link, Form, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 
 
 export default function SignupForm() {
-  const { currentUser, signup, authError } = useContext(AuthContext);
+  const { currentUser, signup } = useContext(AuthContext);
   
   if (currentUser) {
     return <Navigate to="/user" />;
@@ -72,6 +72,7 @@ export default function SignupForm() {
             Sign Up
           </button>
         </Form>
+        <p className="mt-4 text-center"> Already a member?   <Link to="/login" className="text-red-500" >Login</Link> </p>
       </div>
     </div>
   );

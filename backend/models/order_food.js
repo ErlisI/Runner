@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Order_Food.init({
-    OrderId:{
+    PartyOrderId:{
       type: DataTypes.INTEGER,
       references: {
         model: "party_orders",
