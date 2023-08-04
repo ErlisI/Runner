@@ -20,6 +20,7 @@ export async function loader({ request }) {
   return { currentUser: null };
 }
 
+
 function Root() {
     
   const { currentUser } = useLoaderData();
