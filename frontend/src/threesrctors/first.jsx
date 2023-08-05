@@ -7,8 +7,9 @@ export default function First() {
   // eslint-disable-next-line no-unused-vars
   const [tableData, setTableData] = useState({});
   const [sortedTables, setSortedTables] = useState([]);
+  
   useEffect(() => {
-    
+
     const handleAddTable = () => {
       const apiEndpoint = '/api/restaurant/rTables';
     

@@ -7,7 +7,8 @@ export default function Table({ table, onDelete }) {
 
   return (
     <div className="flex justify-center items-center">
-      <button className="bg-gray-300 hover:bg-gray-400 w-full py-2 my-1 px-10 rounded">
+      <button className="bg-gray-300 hover:bg-gray-400 w-full py-2 my-1 px-10 rounded"
+      >
         Table: {table.tableNum}
       </button>
       <button
