@@ -8,12 +8,14 @@ import {
 import { AuthContext } from "../context/AuthContext";
 import First from "../threesrctors/first";
 import Second from "../threesrctors/second";
+import Third from "../threesrctors/third";
 
 // eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
 export async function loader({ request }) {
   const response = await fetch("/api/auth/current_user");
   const tablesrespond = await fetch("/api/restaurant/rTables");
   const foodCategoriesRespond = await fetch("/api/restaurant/foodCategories");
+
   const fCategories = await foodCategoriesRespond.json();
   const tables = await tablesrespond.json();
   if (response.ok) {
@@ -101,9 +103,9 @@ function Root() {
         <div className="border w-auto p-2 rounded col-span-4">
           <Second />
         </div>
-        {/* <div className="border w-auto p-2 rounded col-span-1">
-          <First />
-        </div> */}
+        <div className="border w-auto p-2 rounded col-span-1">
+          <Third />
+        </div>
       </div>
     </div>
   );

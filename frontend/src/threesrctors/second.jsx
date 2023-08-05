@@ -1,11 +1,42 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import FoodCategories from './FoodCategories';
+import Form from "../forms/addFoodCategorryForm";
+import AddFoodForm from "../forms/addFoodForm"
+import Modal from "../ui/modal";
 
 export default function Second() {
     const { fCategories } = useLoaderData();
     const [categoryData, setCategoryData] = useState({});
     const [sortedCategories, setSortedCategories] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAddFoodModalVisible, setIsAddFoodModalVisible] = useState(false);
+    
+
+    const showModal = () => {
+        setIsModalVisible(true);
+      }
+    
+      const hideModal = () => {
+        setIsModalVisible(false);
+      }
+
+      const showAddFoodModal = () => {
+        setIsAddFoodModalVisible(true);
+      };
+      
+      const hideAddFoodModal = () => {
+        setIsAddFoodModalVisible(false);
+      };
+   
+
+      const onAddCategory = (newcategory) => {
+        hideModal();
+        setSortedCategories((cetegory) => {
+          return [...cetegory, newcategory];
+        });
+      };
+    
 
     useEffect(() => {
         const handleAddCategory = () => {
@@ -84,14 +115,21 @@ export default function Second() {
 
     return (
         <div className="flex flex-col h-[80vh] items-center justify-center py-15 shadow-md shadow-black/5">
-            <div className="flex flex-row justify-center items-start flex-grow">
-                <div className="mx-auto mb-auto overflow-y-auto">{renderCategories}</div>
-            </div>
+            
+                <div className="grid grid-cols-5 gap-4 mx-auto mb-auto overflow-y-auto">{renderCategories}</div>
+            
+            <Modal isVisible={isModalVisible}  hideModal={hideModal}>
+                <Form hModal={hideModal} onAddCategory={onAddCategory} />
+            </Modal>
+
+            <Modal isVisible={isAddFoodModalVisible} hideModal={hideAddFoodModal}>
+                <AddFoodForm hModal={hideAddFoodModal}  fCategories={fCategories} />
+            </Modal>
             <div className='flex'>
-                <button id="addCategoryButton" className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 mr-4 rounded-full border border-red-600">
-                    Add Category
+                <button id="addCategoryButton" className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 mr-4 rounded-full border border-red-600" onClick={showModal}>
+                    Add Menu Category
                 </button>
-                <button className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600">
+                <button className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"  onClick={showAddFoodModal}>
                     Add Food
                 </button>
             </div>
