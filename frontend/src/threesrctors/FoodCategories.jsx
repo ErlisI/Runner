@@ -7,7 +7,7 @@ export default function FoodCategories({ fCategories, onDelete }) {
     };
 
     return (
-        <div className="flex flex-row justify-center items-center">
+        <div className="flex flex-row justify-center border-2 items-center">
             <button className="bg-gray-300 hover:bg-gray-400 w-full py-6 my-1 px-10 rounded">
                 {fCategories.type}
             </button>
