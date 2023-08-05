@@ -7,15 +7,18 @@ import {
 } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import First from "../threesrctors/first";
+import Second from "../threesrctors/second";
 
 // eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
 export async function loader({ request }) {
   const response = await fetch("/api/auth/current_user");
   const tablesrespond = await fetch("/api/restaurant/rTables");
+  const foodCategoriesRespond = await fetch("/api/restaurant/foodCategories");
+  const fCategories = await foodCategoriesRespond.json();
   const tables = await tablesrespond.json();
   if (response.ok) {
     const { user } = await response.json();
-    return { currentUser: user, tables };
+    return { currentUser: user, tables, fCategories };
   }
   return { currentUser: null };
 }
@@ -95,19 +98,12 @@ function Root() {
         <div className="border w-auto p-2 rounded col-span-1">
           <First />
         </div>
-        {/* <div className="border w-auto p-2 rounded col-span-4">
-          <First />
+        <div className="border w-auto p-2 rounded col-span-4">
+          <Second />
         </div>
-        <div className="border w-auto p-2 rounded col-span-1">
+        {/* <div className="border w-auto p-2 rounded col-span-1">
           <First />
         </div> */}
-
-        {/*<div className="border p-4 rounded col-span-3"><First /></div>
-        <div className="border p-2 rounded col-span-1"><First /></div> */}
-
-        {/* <Second />
-            <Third /> 
-        */}
       </div>
     </div>
   );
