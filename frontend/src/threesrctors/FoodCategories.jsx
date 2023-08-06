@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function FoodCategories({ fCategories, onDelete, onClick }) {
@@ -22,7 +21,7 @@ export default function FoodCategories({ fCategories, onDelete, onClick }) {
   };
 
   return (
-    <div className="flex flex-row justify-center border-2 items-center">
+    <div className="flex flex-row justify-center items-center">
       <button
         className="bg-gray-300 hover:bg-gray-400 w-full py-6 my-1 px-10 rounded"
         onClick={handleCategoryClick}
