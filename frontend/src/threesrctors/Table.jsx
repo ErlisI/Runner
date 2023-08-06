@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 
-export default function Table({ table, onDelete,onClick }) {
+export default function Table({ table, onDelete, onClick }) {
   const handleDelete = () => {
     onDelete(table.id);
   };

@@ -4,7 +4,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 // eslint-disable-next-line no-unused-vars
-export default function AddFoodForm({ hModal, fCategories, foods }) {
+export default function AddFoodForm({ hModal, fCategories, foods, partyOrderId }) {
   // eslint-disable-next-line no-unused-vars
   const [foodsInCategory, setFoodsInCategory] = useState(foods);
   const [foodQuantities, setFoodQuantities] = useState({});
@@ -18,23 +18,24 @@ export default function AddFoodForm({ hModal, fCategories, foods }) {
     }));
   };
 
+
   const handleAddClick = async () => {
     const orderFoods = [];
-
+  
     for (const foodId in foodQuantities) {
       if (foodQuantities[foodId] > 0) {
         orderFoods.push({
           FoodId: parseInt(foodId),
-          PartyOrderId: 9,
+          PartyOrderId: partyOrderId,
           Quantity: foodQuantities[foodId],
         });
       }
     }
-
+  
     if (orderFoods.length === 0) {
       return;
     }
-
+  
     try {
       const response = await fetch('/api/restaurant/orderFoods', {
         method: 'POST',
@@ -43,20 +44,22 @@ export default function AddFoodForm({ hModal, fCategories, foods }) {
         },
         body: JSON.stringify({ orderFoods }),
       });
-
-      const data = await response.json();
-      setTotalFoodPrice(data.totalFoodPrice || 0);
-
-      // Reset foodQuantities to clear selected quantities after adding
-      setFoodQuantities({});
-
-      // You can add any further actions here after a successful response
+  
+      if (response.ok) {
+        const data = await response.json();
+        setTotalFoodPrice(data.totalFoodPrice || 0);
+        setFoodQuantities({});
+  
+        hModal();
+  
+      } else {
+        console.error('Error adding order foods:', response.statusText);
+      }
     } catch (error) {
       console.error('Error adding order foods:', error);
-      // Handle error state if needed
     }
   };
-
+  
 
   return (
     <div className="py-5">

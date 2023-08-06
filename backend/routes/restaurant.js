@@ -361,11 +361,17 @@ router.delete("/foodCategories/:catId/foods/:id", authenticateUser, async (req, 
 
 // ---------- Party Order ---------- //
 
-router.get('/partyOrders/:partyOrderId', async (req, res) => {
-    const { partyOrderId } = req.params;
+
+router.get('/partyOrders/:rTableId', async (req, res) => {
+    const { rTableId } = req.params;
 
     try {
-        const partyOrder = await Party_Order.findByPk(partyOrderId, {
+        const partyOrders = await Party_Order.findAll({
+            where: { 
+                rTableId, 
+                open: true 
+            },
+            
             include: [
                 {
                     model: Food,
@@ -374,14 +380,14 @@ router.get('/partyOrders/:partyOrderId', async (req, res) => {
             ]
         });
 
-        if (partyOrder) {
-            res.status(200).json(partyOrder);
+        if (partyOrders.length > 0) {
+            res.status(200).json(partyOrders);
         } else {
-            res.status(404).json({ message: 'Party order not found' });
+            res.status(404).json({ message: 'No party orders found for the specified table' });
         }
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Error occurred while retrieving party order', error: err });
+        res.status(500).json({ message: 'Error occurred while retrieving party orders', error: err });
     }
 });
 
@@ -418,8 +424,6 @@ router.post('/rTables/:id/partyOrders', async (req, res) => {
         res.status(500).json({ message: 'Error occurred while creating party order', error: err });
     }
 });
-
-
 
 
 router.patch('/rTables/:id/partyOrders/:partyOrderId/close', async (req, res) => {
