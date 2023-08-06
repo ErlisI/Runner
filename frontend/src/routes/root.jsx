@@ -31,6 +31,15 @@ function Root() {
   const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
+///////////////////////////////////////////////////////
+const [selectedTableId, setSelectedTableId] = useState(null);
+
+const handleTableClick = (tableId) => {
+  setSelectedTableId(tableId);
+};
+
+/////////////////////////////////////////////////////
+
   useEffect(() => {
     setCurrentUser(currentUser);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,10 +108,10 @@ function Root() {
 
       <div className="grid grid-cols-6 gap-4 m-4 ">
         <div className="border w-auto p-2 rounded col-span-1">
-          <First />
+          <First onTableClick={handleTableClick}/>
         </div>
         <div className="border w-auto p-2 rounded col-span-4">
-          <Second />
+          <Second selectedTableId={selectedTableId}  />
         </div>
         <div className="border w-auto p-2 rounded col-span-1">
           <Third />

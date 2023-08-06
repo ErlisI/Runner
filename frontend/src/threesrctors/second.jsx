@@ -6,7 +6,7 @@ import AddFoodForm from "../forms/addFoodForm";
 import AddOrderedFood from "../forms/addOrderedFoods";
 import Modal from "../ui/modal";
 
-export default function Second() {
+export default function Second({selectedTableId}) {
   const { fCategories } = useLoaderData();
   const [categoryData, setCategoryData] = useState({});
   const [sortedCategories, setSortedCategories] = useState([]);
@@ -14,6 +14,40 @@ export default function Second() {
   const [isAddFoodModalVisible, setIsAddFoodModalVisible] = useState(false);
   const [isAddOFModalVisible, setIsAddOFModalVisible] = useState(false);
   const [foodsInSelectedCategory, setFoodsInSelectedCategory] = useState([]);
+
+  /////////////////////////////
+  const [isStartOrderLoading, setIsStartOrderLoading] = useState(false);
+  const [orderStatus, setOrderStatus] = useState("");
+  const handleStartOrder = () => {
+    setIsStartOrderLoading(true);
+
+    const apiEndpoint = `/api/restaurant/rTables/${selectedTableId}/partyOrders`;
+
+    fetch(apiEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Response from server:", data);
+        setOrderStatus("Order started successfully!");
+        setIsStartOrderLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error during the POST request:", error);
+        setOrderStatus("Error starting order. Please try again.");
+        setIsStartOrderLoading(false);
+      });
+  };
+
+  /////////////////////////////
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -148,7 +182,7 @@ export default function Second() {
       <div className="grid grid-cols-5 gap-4 mx-auto mb-auto overflow-y-auto">
         {renderCategories}
       </div>
-
+      <h2>Content for Table {selectedTableId}</h2>
       <Modal isVisible={isModalVisible} hideModal={hideModal}>
         <Form hModal={hideModal} onAddCategory={onAddCategory} />
       </Modal>
@@ -179,6 +213,14 @@ export default function Second() {
         >
           Add Food
         </button>
+        <button
+          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
+          onClick={handleStartOrder}
+          disabled={isStartOrderLoading}
+        >
+          {isStartOrderLoading ? "Starting Order..." : "Start Order"}
+        </button>
+        
       </div>
     </div>
   );
