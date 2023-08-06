@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import Table from "./Table";
 
-export default function First() {
+export default function First({ onTableClick}) {
   const { tables } = useLoaderData();
   // eslint-disable-next-line no-unused-vars
   const [tableData, setTableData] = useState({});
@@ -77,9 +77,9 @@ export default function First() {
   
 
   const renderTables = sortedTables.map((table) => (
-    <Table table={table} key={table.id} onDelete={handleDeleteTable} />
+    <Table table={table} key={table.id} onDelete={handleDeleteTable} onClick={() => onTableClick(table.id)} />
   ));
-
+    
   return (
     <div className="flex flex-col h-[80vh] items-center justify-center py-15 shadow-md shadow-black/5">
       <div className="flex justify-center items-start flex-grow">

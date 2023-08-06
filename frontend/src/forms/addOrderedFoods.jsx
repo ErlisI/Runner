@@ -106,8 +106,10 @@ export default function AddFoodForm({ hModal, fCategories, foods }) {
 
 AddFoodForm.propTypes = {
   hModal: PropTypes.func.isRequired,
-  fCategories: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    type: PropTypes.string.isRequired,
-  }).isRequired,
+  fCategories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      type: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
