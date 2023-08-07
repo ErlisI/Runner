@@ -8,13 +8,18 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import ErrorPage from "./ErrorPage.jsx";
 import AuthProvider from "./context/AuthContext";
 import "./index.css";
+import MainP from "./threesrctors/mainpage"
 
 const router = createBrowserRouter([
   {
     path: "/",
-
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/",
+        element: <MainP />,
+        errorElement: <ErrorPage />,
+      },
       {
         path: "/login",
         element: <Login />,

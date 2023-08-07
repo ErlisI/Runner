@@ -36,6 +36,8 @@ function Root() {
   const [partyOrderId, setPartyOrderId] = useState(null);
   const [partyOrders, setPartyOrders] = useState(null);
   const [partyTotal, setPartyTotal] = useState(0);
+  
+  
 
 
 
@@ -122,18 +124,22 @@ function Root() {
     }
   };
 
-  console.log(partyOrders);
+ 
 
   return (
     <div>
-      <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
+       <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
         <img
           className="h-40 mx-10"
-          src="https://cdn.discordapp.com/attachments/669304891662925855/1133077409630007326/image.png"
+          src="/logo.png"
           alt="Runner Logo"
         ></img>
+        <div>
+          <h2 className="text-5xl">{currentUser.name}</h2> 
+        </div>
 
         <div className="flex flex-col items-center justify-center mx-10 text-lg">
+          
           <Form onSubmit={handleLogout}>
             <button className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mt-4 rounded-full border border-red-600">
               Logout
