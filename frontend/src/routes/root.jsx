@@ -99,11 +99,11 @@ function Root() {
 
       const partyOrder = await response.json();
       if (partyOrder) {
-        setPartyOrderId(partyOrder.id);
-        setPartyTotal(partyOrder.Total);
+        setPartyOrderId(partyOrder[0].id);
+        setPartyTotal(partyOrder[0].Total);
 
         setOrderedFood(
-          partyOrder.Food.map((food) => ({
+          partyOrder[0].Food.map((food) => ({
             price: food.price,
             name: food.name,
             quantity: food.Order_Food.Quantity,

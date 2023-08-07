@@ -41,7 +41,7 @@ export default function SignupForm() {
             />
           </fieldset>
           <fieldset className="flex flex-col  ">
-            <label htmlFor="rName">Restauran Name</label>
+            <label htmlFor="rName">Restaurant Name</label>
             <input
               id="rName"
               type="text"
