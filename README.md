@@ -54,10 +54,13 @@ npx sequelize-cli init
 npx sequelize-cli db:migrate
 ```
 go back to where you do the npm install where the front is and then  run
+in the front end and
 ```
-npm run dev in the front end and
-
-npm start on the back end
+npm run dev 
+```
+on the back end
+```
+npm start 
 ``` 
 Finally, press the link that appears in the front end's terminal to open the website.
 
