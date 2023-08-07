@@ -6,7 +6,8 @@ import AddFoodForm from "../forms/addFoodForm";
 import AddOrderedFood from "../forms/addOrderedFoods";
 import Modal from "../ui/modal";
 
-export default function Second({selectedTableId}) {
+// eslint-disable-next-line react/prop-types
+export default function Second({ selectedTableId, partyOrderId }) {
   const { fCategories } = useLoaderData();
   const [categoryData, setCategoryData] = useState({});
   const [sortedCategories, setSortedCategories] = useState([]);
@@ -14,38 +15,7 @@ export default function Second({selectedTableId}) {
   const [isAddFoodModalVisible, setIsAddFoodModalVisible] = useState(false);
   const [isAddOFModalVisible, setIsAddOFModalVisible] = useState(false);
   const [foodsInSelectedCategory, setFoodsInSelectedCategory] = useState([]);
-
-  /////////////////////////////
   const [isStartOrderLoading, setIsStartOrderLoading] = useState(false);
-  const [orderStatus, setOrderStatus] = useState("");
-  const handleStartOrder = () => {
-    setIsStartOrderLoading(true);
-
-    const apiEndpoint = `/api/restaurant/rTables/${selectedTableId}/partyOrders`;
-
-    fetch(apiEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Response from server:", data);
-        setOrderStatus("Order started successfully!");
-        setIsStartOrderLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error during the POST request:", error);
-        setOrderStatus("Error starting order. Please try again.");
-        setIsStartOrderLoading(false);
-      });
-  };
 
   /////////////////////////////
 
@@ -122,13 +92,14 @@ export default function Second({selectedTableId}) {
     };
   }, [categoryData]);
 
+
   useEffect(() => {
-    // Sort the food categories based on their type
     const sortedCategories = [...fCategories].sort((a, b) =>
       a.type.localeCompare(b.type)
     );
     setSortedCategories(sortedCategories);
   }, [fCategories]);
+
 
   const handleDeleteCategory = (categoryId) => {
     const apiEndpoint = `/api/restaurant/foodCategories/${categoryId}`;
@@ -151,6 +122,7 @@ export default function Second({selectedTableId}) {
         console.error("Error during the DELETE request:", error);
       });
   };
+
   const handleCategoryClick = async (categoryId) => {
     try {
       const response = await fetch(
@@ -161,11 +133,38 @@ export default function Second({selectedTableId}) {
       }
       const foods = await response.json();
       console.log(foods);
-      setFoodsInSelectedCategory(foods); // Set the state with the fetched foods
+      setFoodsInSelectedCategory(foods);
       showAddOrderedFood();
     } catch (error) {
       console.error("Error fetching foods:", error);
     }
+  };
+
+  const handleStartOrder = () => {
+    setIsStartOrderLoading(true);
+
+    const apiEndpoint = `/api/restaurant/rTables/${selectedTableId}/partyOrders`;
+
+    fetch(apiEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Response from server:", data);
+        setIsStartOrderLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error during the POST request:", error);
+        setIsStartOrderLoading(false);
+      });
   };
 
   const renderCategories = sortedCategories.map((category) => (
@@ -182,7 +181,7 @@ export default function Second({selectedTableId}) {
       <div className="grid grid-cols-5 gap-4 mx-auto mb-auto overflow-y-auto">
         {renderCategories}
       </div>
-      <h2>Content for Table {selectedTableId}</h2>
+
       <Modal isVisible={isModalVisible} hideModal={hideModal}>
         <Form hModal={hideModal} onAddCategory={onAddCategory} />
       </Modal>
@@ -196,23 +195,26 @@ export default function Second({selectedTableId}) {
           hModal={hideAddOrderedFood}
           fCategories={fCategories}
           foods={foodsInSelectedCategory}
+          partyOrderId={partyOrderId}
         />
       </Modal>
 
       <div className="flex">
         <button
-          id="addCategoryButton"
           className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 mr-4 rounded-full border border-red-600"
-          onClick={showModal}
-        >
-          Add Menu Category
-        </button>
-        <button
-          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
           onClick={showAddFoodModal}
         >
           Add Food
         </button>
+        
+        <button
+          id="addCategoryButton"
+          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 rounded-full border border-red-600"
+          onClick={showModal}
+        >
+          Add Menu Category
+        </button>
+
         <button
           className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
           onClick={handleStartOrder}
@@ -220,7 +222,6 @@ export default function Second({selectedTableId}) {
         >
           {isStartOrderLoading ? "Starting Order..." : "Start Order"}
         </button>
-        
       </div>
     </div>
   );

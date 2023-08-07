@@ -361,27 +361,36 @@ router.delete("/foodCategories/:catId/foods/:id", authenticateUser, async (req, 
 
 // ---------- Party Order ---------- //
 
-router.get('/partyOrders/:partyOrderId', async (req, res) => {
-    const { partyOrderId } = req.params;
+
+router.get('/partyOrders/:rTableId', async (req, res) => {
+    const { rTableId } = req.params;
 
     try {
-        const partyOrder = await Party_Order.findByPk(partyOrderId, {
+        const partyOrders = await Party_Order.findAll({
+            where: { 
+                rTableId, 
+                open: true 
+            },
+            
             include: [
                 {
                     model: Food,
-                    attributes: ['price', 'name']
+                    attributes: ['price', 'name'],
+                    through: {
+                        attributes: ['Quantity']
+                    }
                 }
             ]
         });
 
-        if (partyOrder) {
-            res.status(200).json(partyOrder);
+        if (partyOrders.length > 0) {
+            res.status(200).json(partyOrders);
         } else {
-            res.status(404).json({ message: 'Party order not found' });
+            res.status(404).json({ message: 'No party orders found for the specified table' });
         }
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Error occurred while retrieving party order', error: err });
+        res.status(500).json({ message: 'Error occurred while retrieving party orders', error: err });
     }
 });
 
@@ -418,8 +427,6 @@ router.post('/rTables/:id/partyOrders', async (req, res) => {
         res.status(500).json({ message: 'Error occurred while creating party order', error: err });
     }
 });
-
-
 
 
 router.patch('/rTables/:id/partyOrders/:partyOrderId/close', async (req, res) => {
@@ -476,12 +483,26 @@ router.post('/orderFoods', async (req, res) => {
                 return res.status(400).json({ message: 'Cannot create Order_Food for a closed party order' });
             }
 
-            // Create the new Order_Food
-            const orderFood = await Order_Food.create({
-                FoodId: FoodId,
-                PartyOrderId: PartyOrderId,
-                Quantity: Quantity,
+            // Check if the Order_Food already exists
+            let orderFood = await Order_Food.findOne({
+                where: {
+                    FoodId: FoodId,
+                    PartyOrderId: PartyOrderId
+                }
             });
+
+            if (orderFood) {
+                // Update the existing Order_Food's Quantity
+                const newQuantity = orderFood.Quantity + Quantity;
+                await orderFood.update({ Quantity: newQuantity });
+            } else {
+                // Create a new Order_Food
+                orderFood = await Order_Food.create({
+                    FoodId: FoodId,
+                    PartyOrderId: PartyOrderId,
+                    Quantity: Quantity
+                });
+            }
 
             // Calculate the price of the added food item
             const foodPrice = food.price * Quantity;
@@ -498,6 +519,7 @@ router.post('/orderFoods', async (req, res) => {
         res.status(500).json({ message: 'Error occurred while creating order foods', error: err });
     }
 });
+
 
 
 module.exports = router;
