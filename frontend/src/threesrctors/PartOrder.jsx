@@ -10,3 +10,5 @@ export default function PartyOrder({ partyOrders }) {
 }
 
 //FIX THIS ALEX!!!!!!!!!!!!!!!!!!
+
+//Msg from ALEX-> WTF IS THIS FOR?????????????????? U are not even using this at all!!!!!
