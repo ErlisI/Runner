@@ -19,7 +19,6 @@ export default function Second({ selectedTableId, partyOrderId }) {
 
   ///////////////////////////////
 
-  
   const [isOrderStarted, setIsOrderStarted] = useState(false);
   const [isCloseOrderLoading, setIsCloseOrderLoading] = useState(false);
 
@@ -64,7 +63,6 @@ export default function Second({ selectedTableId, partyOrderId }) {
 
   const hideModal = () => {
     setIsModalVisible(false);
-    window.location.reload();
   };
 
   const showAddFoodModal = () => {
@@ -131,14 +129,12 @@ export default function Second({ selectedTableId, partyOrderId }) {
     };
   }, [categoryData]);
 
-
   useEffect(() => {
     const sortedCategories = [...fCategories].sort((a, b) =>
       a.type.localeCompare(b.type)
     );
     setSortedCategories(sortedCategories);
   }, [fCategories]);
-
 
   const handleDeleteCategory = (categoryId) => {
     const apiEndpoint = `/api/restaurant/foodCategories/${categoryId}`;
@@ -246,7 +242,7 @@ export default function Second({ selectedTableId, partyOrderId }) {
         >
           Add Food
         </button>
-        
+
         <button
           id="addCategoryButton"
           className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 rounded-full border border-red-600"
@@ -256,14 +252,17 @@ export default function Second({ selectedTableId, partyOrderId }) {
         </button>
 
         <button
-        className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
-        onClick={handleOrderToggle}
-        disabled={isStartOrderLoading || isCloseOrderLoading}
-      >
-        {isOrderStarted ? "Close Party Order" : (isStartOrderLoading ? "Starting Order..." : "Start Order")}
-      </button>
+          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
+          onClick={handleOrderToggle}
+          disabled={isStartOrderLoading || isCloseOrderLoading}
+        >
+          {isOrderStarted
+            ? "Close Party Order"
+            : isStartOrderLoading
+            ? "Starting Order..."
+            : "Start Order"}
+        </button>
       </div>
-      
     </div>
   );
 }
