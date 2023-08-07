@@ -375,7 +375,10 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
             include: [
                 {
                     model: Food,
-                    attributes: ['price', 'name']
+                    attributes: ['price', 'name'],
+                    through: {
+                        attributes: ['Quantity']
+                    }
                 }
             ]
         });
@@ -480,12 +483,26 @@ router.post('/orderFoods', async (req, res) => {
                 return res.status(400).json({ message: 'Cannot create Order_Food for a closed party order' });
             }
 
-            // Create the new Order_Food
-            const orderFood = await Order_Food.create({
-                FoodId: FoodId,
-                PartyOrderId: PartyOrderId,
-                Quantity: Quantity,
+            // Check if the Order_Food already exists
+            let orderFood = await Order_Food.findOne({
+                where: {
+                    FoodId: FoodId,
+                    PartyOrderId: PartyOrderId
+                }
             });
+
+            if (orderFood) {
+                // Update the existing Order_Food's Quantity
+                const newQuantity = orderFood.Quantity + Quantity;
+                await orderFood.update({ Quantity: newQuantity });
+            } else {
+                // Create a new Order_Food
+                orderFood = await Order_Food.create({
+                    FoodId: FoodId,
+                    PartyOrderId: PartyOrderId,
+                    Quantity: Quantity
+                });
+            }
 
             // Calculate the price of the added food item
             const foodPrice = food.price * Quantity;
@@ -502,6 +519,7 @@ router.post('/orderFoods', async (req, res) => {
         res.status(500).json({ message: 'Error occurred while creating order foods', error: err });
     }
 });
+
 
 
 module.exports = router;

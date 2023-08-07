@@ -15,7 +15,7 @@ export async function loader({ request }) {
   const response = await fetch("/api/auth/current_user");
   const tablesrespond = await fetch("/api/restaurant/rTables");
   const foodCategoriesRespond = await fetch("/api/restaurant/foodCategories");
-  
+
 
   const fCategories = await foodCategoriesRespond.json();
   const tables = await tablesrespond.json();
@@ -31,18 +31,23 @@ function Root() {
   const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
-///////////////////////////////////////////////////////
-const [selectedTableId, setSelectedTableId] = useState(null);
+  ///////////////////////////////////////////////////////
+  const [selectedTableId, setSelectedTableId] = useState(null);
+  const [partyOrderId, setPartyOrderId] = useState(null);
+  const [partyOrders, setPartyOrders] = useState(null);
+  const [partyTotal, setPartyTotal] = useState(0);
 
-const handleTableClick = (tableId) => {
-  setSelectedTableId(tableId);
-};
 
-/////////////////////////////////////////////////////
+
+  const handleTableClick = (tableId) => {
+    setSelectedTableId(tableId);
+  };
+
+  /////////////////////////////////////////////////////
 
   useEffect(() => {
     setCurrentUser(currentUser);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const handleLogout = async (e) => {
@@ -87,6 +92,38 @@ const handleTableClick = (tableId) => {
     })();
   }, []);
 
+  
+  const handleGetOrder = async () => {
+    try {
+      const response = await fetch(`/api/restaurant/partyOrders/${selectedTableId}`);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const partyOrder = await response.json();
+      if (partyOrder && partyOrder.length > 0) {
+        setPartyOrderId(partyOrder[0].id);
+        setPartyTotal(partyOrder[0].Total);
+        
+        setPartyOrders(partyOrder[0].Food.map(food => ({
+          price: food.price,
+          name: food.name,
+          quantity: food.Order_Food.Quantity,
+        })))
+        
+      } else {
+        console.log("No party order found for the specified table.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching party orders:", error);
+      return null;
+    }
+  };
+
+  console.log(partyOrders);
+
   return (
     <div>
       <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
@@ -107,14 +144,24 @@ const handleTableClick = (tableId) => {
       </nav>
 
       <div className="grid grid-cols-6 gap-4 m-4 ">
-        <div className="border w-auto p-2 rounded col-span-1">
-          <First onTableClick={handleTableClick}/>
+        <div className="w-auto p-2 rounded col-span-1">
+          <h1 className="text-2xl text-center mt-2">Tables</h1>
+          <hr className="mt-4 mb-10 w-full border-solid border-t-2 border-gray-300" />
+          <First handleGetOrder={handleGetOrder} onTableClick={handleTableClick}/>
         </div>
-        <div className="border w-auto p-2 rounded col-span-4">
-          <Second selectedTableId={selectedTableId}  />
+        <div className="w-auto p-2 rounded col-span-4">
+          <h1 className="text-2xl text-center mt-2">Food Categories</h1>
+          <hr className="mt-4 mb-10 w-full border-solid border-t-2 border-gray-300" />
+          <Second selectedTableId={selectedTableId} partyOrderId={partyOrderId} />
         </div>
-        <div className="border w-auto p-2 rounded col-span-1">
-          <Third />
+        <div className="w-auto p-2 rounded col-span-1">
+          <div className="grid grid-cols-3 mt-4">
+            <h1 className="mx-auto col-span-1">Item</h1>
+            <h1 className="mx-auto col-span-1">Quantity</h1>
+            <h1 className="mx-auto col-span-1">Price</h1>
+          </div>
+          <hr className="mt-4 mb-10 w-full border-solid border-t-2 border-gray-300" />
+          <Third partyOrders={partyOrders} partyTotal={partyTotal}/>
         </div>
       </div>
     </div>

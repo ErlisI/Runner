@@ -6,12 +6,19 @@ export default function Table({ table, onDelete, onClick }) {
     onDelete(table.id);
   };
 
+  const handleHighlight = () => {
+    console.log("hello" + table.id);
+  };
+
   return (
     <div className="flex justify-center items-center">
-      <button className="bg-gray-300 hover:bg-gray-400 w-full py-2 my-1 px-10 rounded" onClick={onClick}
-      >
-        Table: {table.tableNum}
-      </button>
+      <div onClick={handleHighlight}>
+        <button className="bg-gray-300 hover:bg-gray-400 w-full py-2 my-1 px-10 rounded"
+          onClick={onClick}
+        >
+          Table: {table.tableNum}
+        </button>
+      </div>
       <button
         className="text-red-600 hover:text-red-800 font-bold py-1 px-2 ml-2 rounded"
         onClick={handleDelete}

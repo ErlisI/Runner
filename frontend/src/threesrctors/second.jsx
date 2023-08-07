@@ -7,7 +7,7 @@ import AddOrderedFood from "../forms/addOrderedFoods";
 import Modal from "../ui/modal";
 
 // eslint-disable-next-line react/prop-types
-export default function Second({ selectedTableId }) {
+export default function Second({ selectedTableId, partyOrderId }) {
   const { fCategories } = useLoaderData();
   const [categoryData, setCategoryData] = useState({});
   const [sortedCategories, setSortedCategories] = useState([]);
@@ -16,9 +16,6 @@ export default function Second({ selectedTableId }) {
   const [isAddOFModalVisible, setIsAddOFModalVisible] = useState(false);
   const [foodsInSelectedCategory, setFoodsInSelectedCategory] = useState([]);
   const [isStartOrderLoading, setIsStartOrderLoading] = useState(false);
-  //const [orderStatus, setOrderStatus] = useState("");
-  const [partyOrderId, setPartyOrderId] = useState(null);
-
 
   /////////////////////////////
 
@@ -162,39 +159,13 @@ export default function Second({ selectedTableId }) {
       })
       .then((data) => {
         console.log("Response from server:", data);
-        //setOrderStatus("Order started successfully!");
         setIsStartOrderLoading(false);
       })
       .catch((error) => {
         console.error("Error during the POST request:", error);
-        //setOrderStatus("Error starting order. Please try again.");
         setIsStartOrderLoading(false);
       });
   };
-
-
-  const handleGetOrder = async () => {
-    try {
-      const response = await fetch(`/api/restaurant/partyOrders/${selectedTableId}`);
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const partyOrder = await response.json();
-
-      if (partyOrder && partyOrder[0].id) {
-        setPartyOrderId(partyOrder[0].id);
-      } else {
-        console.log("No party order found for the specified table.");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching party orders:", error);
-      return null;
-    }
-  };
-
 
   const renderCategories = sortedCategories.map((category) => (
     <FoodCategories
@@ -207,7 +178,7 @@ export default function Second({ selectedTableId }) {
 
   return (
     <div className="flex flex-col h-[80vh] items-center justify-center py-15 shadow-md shadow-black/5">
-      <div className="grid grid-cols-5 gap-4 mx-auto mb-auto overflow-y-auto" onClick={handleGetOrder}>
+      <div className="grid grid-cols-5 gap-4 mx-auto mb-auto overflow-y-auto">
         {renderCategories}
       </div>
 
@@ -230,18 +201,20 @@ export default function Second({ selectedTableId }) {
 
       <div className="flex">
         <button
-          id="addCategoryButton"
           className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 mr-4 rounded-full border border-red-600"
-          onClick={showModal}
-        >
-          Add Menu Category
-        </button>
-        <button
-          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
           onClick={showAddFoodModal}
         >
           Add Food
         </button>
+        
+        <button
+          id="addCategoryButton"
+          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 rounded-full border border-red-600"
+          onClick={showModal}
+        >
+          Add Menu Category
+        </button>
+
         <button
           className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
           onClick={handleStartOrder}
@@ -249,7 +222,6 @@ export default function Second({ selectedTableId }) {
         >
           {isStartOrderLoading ? "Starting Order..." : "Start Order"}
         </button>
-
       </div>
     </div>
   );

@@ -98,7 +98,7 @@ export default function AddFoodForm({ hModal, fCategories, foods, partyOrderId }
       <div className="text-center mt-12">
         <button
           onClick={handleAddClick}
-          className="mx-auto border border-black px-5 py-2 rounded-lg hover:bg-black hover:text-white"
+          className="mx-auto bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 rounded-full border border-red-600"
         >
           Add
         </button>
