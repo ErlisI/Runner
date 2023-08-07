@@ -53,10 +53,14 @@ npm install --save sequelize sequelize-cli pg-hstore
 npx sequelize-cli init
 npx sequelize-cli db:migrate
 ```
-go back where you do npm install where the frontend is and then  run
+go back to where you do the npm install where the front is and then  run
 ```
 npm run dev in the front end and
 
 npm start on the back end
 ``` 
-Finally, press the link that appear in the frontend's terminal.
+Finally, press the link that appears in the front end's terminal to open the website.
+
+To contact us you can send us a message via emails:
+
+Thanks for you support, Have a good one.
