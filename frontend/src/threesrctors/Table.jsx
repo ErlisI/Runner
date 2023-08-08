@@ -1,23 +1,18 @@
 /* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 
-export default function Table({ table, onDelete, onClick }) {
+export default function Table({ table, onDelete, onClick, highlighted }) {
   const handleDelete = () => {
     onDelete(table.id);
   };
 
-  const handleHighlight = () => {
-    console.log("hello" + table.id);
-    onClick();
-  };
-
-  
 
   return (
     <div className="flex justify-center items-center">
       <div >
-        <button className="bg-gray-300 hover:bg-gray-400 w-full py-2 my-1 px-10 rounded"
-          onClick={handleHighlight}
+        <button className={`w-full py-2 my-1 px-10 rounded ${highlighted ? 'bg-red-600 text-white' : 'bg-gray-300 hover:bg-gray-400'
+          }`}
+          onClick={onClick}
         >
           Table: {table.tableNum}
         </button>

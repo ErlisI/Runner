@@ -4,7 +4,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 // eslint-disable-next-line no-unused-vars
-export default function AddFoodForm({ hModal, fCategories, foods, partyOrderId }) {
+export default function AddFoodForm({ hModal, foods, partyOrderId, handleFoodAdded }) {
   // eslint-disable-next-line no-unused-vars
   const [foodsInCategory, setFoodsInCategory] = useState(foods);
   const [foodQuantities, setFoodQuantities] = useState({});
@@ -18,9 +18,11 @@ export default function AddFoodForm({ hModal, fCategories, foods, partyOrderId }
     }));
   };
 
+  console.log(foods);
 
   const handleAddClick = async () => {
     const orderFoods = [];
+    const selectedFoods = [];
   
     for (const foodId in foodQuantities) {
       if (foodQuantities[foodId] > 0) {
@@ -31,8 +33,26 @@ export default function AddFoodForm({ hModal, fCategories, foods, partyOrderId }
         });
       }
     }
+
+    for (const foodId in foodQuantities) {
+      if (foodQuantities[foodId] > 0) {
+        const selectedFood = foodsInCategory.find(food => food.id === parseInt(foodId));
+  
+        if (selectedFood) {
+          selectedFoods.push({
+            name: selectedFood.name,
+            price: selectedFood.price,
+            quantity: foodQuantities[foodId],
+          });
+        }
+      }
+    }
   
     if (orderFoods.length === 0) {
+      return;
+    }
+
+    if (selectedFoods.length === 0) {
       return;
     }
   
@@ -49,7 +69,7 @@ export default function AddFoodForm({ hModal, fCategories, foods, partyOrderId }
         const data = await response.json();
         setTotalFoodPrice(data.totalFoodPrice || 0);
         setFoodQuantities({});
-  
+        handleFoodAdded(selectedFoods);
         hModal();
   
       } else {
