@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const videoPath = "/videoplayback.mp4"; // Replace with the actual path to your video file

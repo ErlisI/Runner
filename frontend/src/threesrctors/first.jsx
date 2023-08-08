@@ -8,6 +8,8 @@ export default function First({ onTableClick }) {
   // eslint-disable-next-line no-unused-vars
   const [tableData, setTableData] = useState({});
   const [sortedTables, setSortedTables] = useState([]);
+  const [selectedTable, setSelectedTable] = useState(null);
+
 
   useEffect(() => {
     const handleAddTable = () => {
@@ -28,7 +30,6 @@ export default function First({ onTableClick }) {
         })
         .then((data) => {
           console.log("Response from server:", data);
-
           setSortedTables((prevTables) => [...prevTables, data]);
 
           setTableData({});
@@ -46,11 +47,13 @@ export default function First({ onTableClick }) {
     };
   }, [tableData]);
 
+
   useEffect(() => {
     // Sort the tables based on their tableNum in ascending order
     const sortedTables = [...tables].sort((a, b) => a.tableNum - b.tableNum);
     setSortedTables(sortedTables);
   }, [tables]);
+
 
   const handleDeleteTable = (tableId) => {
     const apiEndpoint = `/api/restaurant/rTables/${tableId}`;
@@ -74,12 +77,18 @@ export default function First({ onTableClick }) {
       });
   };
 
+  const handleTableClick = (tableId) => {
+    setSelectedTable(tableId);
+    onTableClick(tableId);
+  };
+
   const renderTables = sortedTables.map((table) => (
     <Table
       table={table}
       key={table.id}
       onDelete={handleDeleteTable}
-      onClick={() => onTableClick(table.id)}
+      onClick={() => handleTableClick(table.id)}
+      highlighted={selectedTable === table.id}
     />
   ));
 

@@ -7,7 +7,7 @@ import AddOrderedFood from "../forms/addOrderedFoods";
 import Modal from "../ui/modal";
 
 // eslint-disable-next-line react/prop-types
-export default function Second({ selectedTableId, partyOrderId }) {
+export default function Second({ partyOrderId, isOrderStarted, handleOrderToggle, handleFoodAdded, tableHasPartyOrder }) {
   const { fCategories } = useLoaderData();
   const [categoryData, setCategoryData] = useState({});
   const [sortedCategories, setSortedCategories] = useState([]);
@@ -15,47 +15,7 @@ export default function Second({ selectedTableId, partyOrderId }) {
   const [isAddFoodModalVisible, setIsAddFoodModalVisible] = useState(false);
   const [isAddOFModalVisible, setIsAddOFModalVisible] = useState(false);
   const [foodsInSelectedCategory, setFoodsInSelectedCategory] = useState([]);
-  const [isStartOrderLoading, setIsStartOrderLoading] = useState(false);
 
-  ///////////////////////////////
-
-  const [isOrderStarted, setIsOrderStarted] = useState(false);
-  const [isCloseOrderLoading, setIsCloseOrderLoading] = useState(false);
-
-  const handleCloseOrder = () => {
-    setIsCloseOrderLoading(true);
-
-    const apiEndpoint = `/api/restaurant/rTables/${selectedTableId}/partyOrders/${partyOrderId}/close`;
-
-    fetch(apiEndpoint, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        setIsOrderStarted(false); // Reset the order status to false after successfully closing the order
-        setIsCloseOrderLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error during the PATCH request:", error);
-        setIsCloseOrderLoading(false);
-      });
-  };
-
-  // Function to toggle the order status and start/close the order
-  const handleOrderToggle = () => {
-    if (!isOrderStarted) {
-      handleStartOrder();
-    } else {
-      handleCloseOrder();
-    }
-  };
-
-  /////////////////////////////
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -175,29 +135,6 @@ export default function Second({ selectedTableId, partyOrderId }) {
     }
   };
 
-  const handleStartOrder = () => {
-    setIsStartOrderLoading(true);
-
-    const apiEndpoint = `/api/restaurant/rTables/${selectedTableId}/partyOrders`;
-
-    fetch(apiEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        setIsOrderStarted(true); // Set the order status to true after successfully starting the order
-        setIsStartOrderLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error during the POST request:", error);
-        setIsStartOrderLoading(false);
-      });
-  };
 
   const renderCategories = sortedCategories.map((category) => (
     <FoodCategories
@@ -207,11 +144,7 @@ export default function Second({ selectedTableId, partyOrderId }) {
       onClick={() => handleCategoryClick(category.id)}
     />
   ));
-  // const handleStartOClick = () => {
-  //   handleStartOrder();
-  //   window.location.reload(); // Reload the page after button click
-  // };
-
+  
   return (
     <div className="flex flex-col h-[80vh] items-center justify-center py-15 shadow-md shadow-black/5">
       <div className="grid grid-cols-5 gap-4 mx-auto mb-auto overflow-y-auto">
@@ -229,9 +162,9 @@ export default function Second({ selectedTableId, partyOrderId }) {
       <Modal isVisible={isAddOFModalVisible} hideModal={hideAddOrderedFood}>
         <AddOrderedFood
           hModal={hideAddOrderedFood}
-          fCategories={fCategories}
           foods={foodsInSelectedCategory}
           partyOrderId={partyOrderId}
+          handleFoodAdded={handleFoodAdded}
         />
       </Modal>
 
@@ -251,17 +184,14 @@ export default function Second({ selectedTableId, partyOrderId }) {
           Add Menu Category
         </button>
 
-        <button
-          className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
-          onClick={handleOrderToggle}
-          disabled={isStartOrderLoading || isCloseOrderLoading}
-        >
-          {isOrderStarted
-            ? "Close Party Order"
-            : isStartOrderLoading
-            ? "Starting Order..."
-            : "Start Order"}
-        </button>
+        {!isOrderStarted && !tableHasPartyOrder ? (
+          <button
+            className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 ml-4 rounded-full border border-red-600"
+            onClick={handleOrderToggle}
+          >
+            Start Order
+          </button>
+        ) : (console.log())}
       </div>
     </div>
   );

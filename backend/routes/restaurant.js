@@ -366,7 +366,7 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
     const { rTableId } = req.params;
 
     try {
-        const partyOrders = await Party_Order.findAll({
+        const partyOrder = await Party_Order.findOne({
             where: { 
                 rTableId, 
                 open: true 
@@ -383,14 +383,14 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
             ]
         });
 
-        if (partyOrders.length > 0) {
-            res.status(200).json(partyOrders);
+        if (partyOrder) {
+            res.status(200).json(partyOrder);
         } else {
-            res.status(404).json({ message: 'No party orders found for the specified table' });
+            res.status(404).json({ message: 'No party order found for the specified table' });
         }
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Error occurred while retrieving party orders', error: err });
+        res.status(500).json({ message: 'Error occurred while retrieving party order', error: err });
     }
 });
 
