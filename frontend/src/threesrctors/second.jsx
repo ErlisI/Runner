@@ -8,14 +8,42 @@ import Modal from "../ui/modal";
 
 // eslint-disable-next-line react/prop-types
 export default function Second({ partyOrderId, isOrderStarted, handleOrderToggle, handleFoodAdded, tableHasPartyOrder }) {
-  const { fCategories } = useLoaderData();
+  const [ fCategories,setFCategory ] = useState([]);
   const [categoryData, setCategoryData] = useState({});
   const [sortedCategories, setSortedCategories] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddFoodModalVisible, setIsAddFoodModalVisible] = useState(false);
   const [isAddOFModalVisible, setIsAddOFModalVisible] = useState(false);
   const [foodsInSelectedCategory, setFoodsInSelectedCategory] = useState([]);
+//////////////////////////////////////////////////////
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const foodCategoriesRespond = await fetch("/api/restaurant/foodCategories");
+      if (foodCategoriesRespond.ok) {
+        const fC = await foodCategoriesRespond.json();
+        setFCategory(fC);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  fetchData(); // Fetch data when component mounts
+
+  const addFoodButton = document.getElementById("addFood");
+
+  const handleAddFoodClick = () => {
+    fetchData(); // Fetch data when the addFood button is clicked
+  };
+
+  addFoodButton.addEventListener("click", handleAddFoodClick);
+
+  return () => {
+    addFoodButton.removeEventListener("click", handleAddFoodClick);
+  };
+}, []);
+///////////////////////////////////////////////////////
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -170,6 +198,7 @@ export default function Second({ partyOrderId, isOrderStarted, handleOrderToggle
 
       <div className="flex">
         <button
+        id="addFood"
           className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mb-4 mr-4 rounded-full border border-red-600"
           onClick={showAddFoodModal}
         >

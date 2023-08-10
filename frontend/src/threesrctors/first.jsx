@@ -4,11 +4,36 @@ import Table from "./Table";
 
 // eslint-disable-next-line react/prop-types
 export default function First({ onTableClick }) {
-  const { tables } = useLoaderData();
+  const [ tables,setTables ] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [tableData, setTableData] = useState({});
   const [sortedTables, setSortedTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
+
+  ///////////////////////////////////////////////////
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+       
+        const tablesRespond = await fetch("/api/restaurant/rTables");
+       
+        if (tablesRespond.ok) {
+          const tablesData = await tablesRespond.json();
+          setTables(tablesData);
+        }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  ////////////////////////////////////////////////////
+
+
 
 
   useEffect(() => {

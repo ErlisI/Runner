@@ -9,14 +9,10 @@ import Third from "../threesrctors/third";
 // eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
 export async function loader({ request }) {
   const response = await fetch("/api/auth/current_user");
-  const tablesrespond = await fetch("/api/restaurant/rTables");
-  const foodCategoriesRespond = await fetch("/api/restaurant/foodCategories");
-
-  const fCategories = await foodCategoriesRespond.json();
-  const tables = await tablesrespond.json();
+  
   if (response.ok) {
     const { user } = await response.json();
-    return { currentUser: user, tables, fCategories };
+    return { currentUser: user };
   }
   return { currentUser: null };
 }

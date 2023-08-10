@@ -94,7 +94,7 @@ export default function AddFoodForm({ hModal, fCategories }) {
           </fieldset>
         ) : (
           // Show a loading state or alternative message if fCategories is empty
-          <p>Loading food categories...</p>
+          <p>No food categories found</p>
         )}
 
         <input
