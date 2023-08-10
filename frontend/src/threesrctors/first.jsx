@@ -4,12 +4,10 @@ import Table from "./Table";
 // eslint-disable-next-line react/prop-types
 export default function First({ onTableClick }) {
   const [ tables,setTables ] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [tableData, setTableData] = useState({});
   const [sortedTables, setSortedTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
 
-  ///////////////////////////////////////////////////
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,10 +27,6 @@ export default function First({ onTableClick }) {
 
     fetchData();
   }, []);
-
-  ////////////////////////////////////////////////////
-
-
 
 
   useEffect(() => {
@@ -63,6 +57,7 @@ export default function First({ onTableClick }) {
         });
     };
 
+    
     const addButton = document.getElementById("addTableButton");
     addButton.addEventListener("click", handleAddTable);
 

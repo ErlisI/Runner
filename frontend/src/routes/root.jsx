@@ -22,8 +22,6 @@ function Root() {
   const handleTableClick = (tableId) => {
     setSelectedTableId(tableId);
   };
-
-
   
 
   const handleLogout = async (e) => {
@@ -53,9 +51,11 @@ function Root() {
     }
   })();
 
+
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
 
   useEffect(() => {
     (async function () {
@@ -127,8 +127,11 @@ function Root() {
       })
       .then((data) => {
         if (data.open) {
-          handleOrderToggleStart();
-          handleHasTablePartyOrder();
+          setOrderedFood([]);
+          setPartyTotal(0);
+          setPartyOrderId(data.id);
+          setIsOrderStarted(true);
+          setTableHasPartyOrder(true);
         } else {
           console.log("Order is not open.");
         }
@@ -162,6 +165,7 @@ function Root() {
 
   useEffect(() => {
     handleGetOrder();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTableId]);
 
 
@@ -175,6 +179,10 @@ function Root() {
     setIsOrderStarted(false);
     handleCloseOrder();
   };
+
+  const handleHasTablePartyOrder = () => {
+    setTableHasPartyOrder(true);
+  }
 
   //present the food on real time with the updated price and total price
   const handleFoodAdded = (newFoods) => {
@@ -198,10 +206,6 @@ function Root() {
     const newPartyTotal = updatedFood.reduce((total, food) => total + (food.price * food.quantity), 0);
     setPartyTotal(newPartyTotal);
   };
-  
-  const handleHasTablePartyOrder = () => {
-    setTableHasPartyOrder(true);
-  }
 
   return (
     <div>
@@ -237,6 +241,7 @@ function Root() {
             isOrderStarted={isOrderStarted}
             handleOrderToggle={handleOrderToggleStart}
             handleFoodAdded={handleFoodAdded}
+            selectedTableId={selectedTableId}
             tableHasPartyOrder={tableHasPartyOrder}
           />
         </div>
