@@ -29,7 +29,7 @@
 
 |In the backend|
 | ------   |
-|npm install -g nodemon|
+|npm install|
 - Then go to your terminal and run 
 `sudo -su postgres`Then run `psql` and inside the psql terminal run these commends 
 ```
