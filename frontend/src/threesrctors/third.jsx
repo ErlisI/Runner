@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-export default function Third({ orderedFood, partyTotal, isOrderStarted, handleOrderToggleClose,  tableHasPartyOrder}) {
+export default function Third({ orderedFood, partyTotal, isOrderStarted, handleOrderToggleClose, tableHasPartyOrder}) {
   return (
     <div className="flex flex-col h-[80vh] py-15 shadow-md shadow-black/5">
       <div className="">
