@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
 import Table from "./Table";
 
 // eslint-disable-next-line react/prop-types

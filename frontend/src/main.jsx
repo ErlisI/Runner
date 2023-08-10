@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root, { loader as rootLoader } from "./routes/root";
+import Root from "./routes/root";
 import Login from "./auth/LoginForm";
 import SignUp from "./auth/SignupForm";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     errorElement: <ErrorPage />,
-    loader: rootLoader,
+   
   },
 ]);
 

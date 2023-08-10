@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
 import FoodCategories from "./FoodCategories";
 import Form from "../forms/addFoodCategorryForm";
 import AddFoodForm from "../forms/addFoodForm";

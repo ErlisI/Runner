@@ -1,24 +1,14 @@
 // import React from 'react';
 import { useEffect, useContext, useState } from "react";
-import { useNavigation, useLoaderData, Form } from "react-router-dom";
+import { useNavigation,  Form } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import First from "../threesrctors/first";
 import Second from "../threesrctors/second";
 import Third from "../threesrctors/third";
 
 // eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
-export async function loader({ request }) {
-  const response = await fetch("/api/auth/current_user");
-  
-  if (response.ok) {
-    const { user } = await response.json();
-    return { currentUser: user };
-  }
-  return { currentUser: null };
-}
 
 function Root() {
-  const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
   const [selectedTableId, setSelectedTableId] = useState(null);
@@ -34,10 +24,7 @@ function Root() {
   };
 
 
-  useEffect(() => {
-    setCurrentUser(currentUser);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -221,7 +208,7 @@ function Root() {
       <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
         <img className="h-40 mx-10" src="/logo.png" alt="Runner Logo"></img>
         <div>
-          <h2 className="text-5xl text-red-600">{currentUser.name}</h2>
+          <h2 className="text-5xl text-red-600">{AuthContext.name}</h2>
         </div>
 
         <div className="flex flex-col items-center justify-center mx-10 text-lg">
