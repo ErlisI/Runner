@@ -46,12 +46,13 @@ DB_HOST=localhost
 DB_NAME=runner_db
 DB_PASSWORD=password
 DB_PORT=5432
+SESSION_SECRET= we can find this if you run consle.log(require("crypto").randomBytes(64).toString("hex"));
 ```
-Lastly go again to the normal terminal and run these commands
+Lastly, go again to the normal terminal and run these commands
 ```
 npm install --save sequelize sequelize-cli pg-hstore
 npx sequelize-cli init
-npx sequelize-cli db:migrate
+npx sequelize-cli db: migrate
 ```
 go back to where you do the npm install where the front is and then  run
 in the front end and
@@ -64,6 +65,6 @@ npm start
 ``` 
 Finally, press the link that appears in the front end's terminal to open the website.
 
-To contact us you can send us a message via emails:
+To contact us you can send us a message via email:
 
-Thanks for you support, Have a good one.
+Thanks for your support, Have a good one.
