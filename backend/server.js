@@ -4,6 +4,7 @@ const port = 4000;
 const session = require("express-session");
 require("dotenv").config();
 const cors = require("cors");
+console.log(require("crypto").randomBytes(64).toString("hex"));
 const authRouter = require("./routes/auth");
 const restaurantRouter = require("./routes/restaurant");
 const {
@@ -13,9 +14,9 @@ const {
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173",
     allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PATCH", "DELETE"]
   })
 );
 
@@ -42,14 +43,12 @@ app.use(
 );
 
 app.use(forbiddenErrorHandler);
-app.use(notFoundErrorHandler); 
+app.use(notFoundErrorHandler);
 
 // routes
 app.use("/api/auth", authRouter);
 app.use("/api/restaurant", restaurantRouter);
 
-
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-

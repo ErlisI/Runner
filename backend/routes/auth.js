@@ -9,7 +9,7 @@ router.get("/current_user", async (req, res) => {
     return res.status(200).json({
       user: {
         id: rUser.id,
-        userName: rUser.username,
+        username: rUser.username,
         email: rUser.email,
         name: rUser.rName
       }
@@ -20,12 +20,18 @@ router.get("/current_user", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+
+  
+  console.log("Request Body:", req.body);
+
+  
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
   try {
+    
     const rUser = await Restaurant.create({
-      userName: req.body.username,
-      rName: req.body.name,
+      username: req.body.username,
+      rName: req.body.rName,
       email: req.body.email,
       password: hashedPassword,
     });
@@ -61,6 +67,7 @@ router.delete("/logout", (req, res) => {
     return res.sendStatus(200);
   });
 });
+
 
 router.post("/login", async (req, res) => {
   try {

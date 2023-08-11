@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasOne(models.DailyReport);
+      this.hasMany(models.Party_Order);
       this.hasMany(models.FoodCategory);
       this.hasMany(models.rTable);
     }
@@ -20,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
-    rName: DataTypes.STRING,
+    rName: {type:DataTypes.STRING,
+      allowNull: false,
+    },
     email: {
       allowNull: false,
       type: DataTypes.STRING

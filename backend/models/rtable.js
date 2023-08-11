@@ -20,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     RestaurantId: DataTypes.INTEGER
-  }, {
+    }, {
     sequelize,
     modelName: 'rTable',
-    tableName: 'rTables',
+    tableName: 'rtables',
   });
   return rTable;
 };
