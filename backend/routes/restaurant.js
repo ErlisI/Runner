@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticateUser } = require("../middleware/auth");
 const { ForbiddenError, NotFoundError } = require("../errors");
 const { Restaurant, rTable, Food, FoodCategory, Party_Order, Order_Food,DailyReport } = require("../models");
+const exportUser = require("../Controller/User"); 
 
 const getRTable = async (id) => {
     const table = await rTable.findByPk(parseInt(id, 10));
@@ -408,9 +409,8 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
 
 // Create a new party order
 router.post('/rTables/:id/partyOrders', async (req, res) => {
-
+    const rUser = req.session.userId;
     const rTableId = req.params.id;
-    
     try {
 
         const existingOpenOrder = await Party_Order.findOne({
@@ -429,6 +429,7 @@ router.post('/rTables/:id/partyOrders', async (req, res) => {
             date: new Date(),
             Total: 0,
             rTableId: rTableId,
+            RestaurantId:rUser,
             open: true,
         });
 
@@ -570,23 +571,21 @@ router.get("/dailyReports/:id",authenticateUser, async (req,res)=>{
      }
  })
 router.post("/dailyReports",authenticateUser,async (req,res)=>{
+    const rUser = req.session.userId;
     try {
         const partyOrder = await Party_Order.findAll();
         if (partyOrder) {
         let total=0 ;
         for(let i=0;i<partyOrder.length;i++)
         {
-            // const totalpertable = await Party_Order.findOne({
-            //     where: {
-            //         RestaurantId: rUser.id, //need to change
-            //     },})
-            // total += totalpertable[i].Total;
-            total+=partyOrder[i].Total;
+            if(partyOrder[i].RestaurantId==rUser){
+            total += partyOrder[i].Total;
+            }
         }
         
         
         const Alltotal = await DailyReport.create({
-            RestaurantId:1,
+            RestaurantId:rUser,
             eCost : total
         }
         );
@@ -597,4 +596,8 @@ router.post("/dailyReports",authenticateUser,async (req,res)=>{
         
 
 })
+
+
+router.get("/downloadExcel",authenticateUser, exportUser);
+
 module.exports = router;
