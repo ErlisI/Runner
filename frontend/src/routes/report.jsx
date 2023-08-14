@@ -1,11 +1,12 @@
 import { useEffect, useContext, useState } from "react";
-import { useNavigation,  Form, Link } from "react-router-dom";
+import { useNavigation, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 
 function Report() {
     const { setCurrentUser } = useContext(AuthContext);
     const [currentUser, setCurrentU] = useState({});
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
