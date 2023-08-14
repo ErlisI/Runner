@@ -11,7 +11,7 @@ export default function ErrorPage() {
       <p className="text-5xl">404</p>
       <p>
         <i>{error.statusText || error.message}</i>
-      </p> */
+      </p>
     </div>
   );
 }

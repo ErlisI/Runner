@@ -15,16 +15,6 @@ module.exports = {
       open: {
         type: Sequelize.BOOLEAN
       },
-      RestaurantId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "restaurants",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       rTableId: {
         type: Sequelize.INTEGER,
         allowNull: false,
