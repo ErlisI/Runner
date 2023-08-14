@@ -341,6 +341,7 @@ router.post("/foodCategories/:id/foods", authenticateUser, async (req, res) => {
         const existingRecord = await Food.findOne({
             where: {
                 name: name,
+                FoodCategoryId: req.params.id
             },
         });
         if (existingRecord)
@@ -372,7 +373,7 @@ router.delete("/foodCategories/:catId/foods/:id", authenticateUser, async (req, 
 
 // ---------- Party Order ---------- //
 
-
+// Get a party order
 router.get('/partyOrders/:rTableId', async (req, res) => {
     const { rTableId } = req.params;
 
@@ -408,7 +409,6 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
 
 // Create a new party order
 router.post('/rTables/:id/partyOrders', async (req, res) => {
-
     const rTableId = req.params.id;
 
     try {
@@ -417,6 +417,7 @@ router.post('/rTables/:id/partyOrders', async (req, res) => {
             where: {
                 rTableId: rTableId,
                 open: true
+
             }
         });
 
@@ -439,7 +440,7 @@ router.post('/rTables/:id/partyOrders', async (req, res) => {
     }
 });
 
-
+// Close a party order
 router.patch('/rTables/:id/partyOrders/:partyOrderId/close', async (req, res) => {
     const PartyOrderId = req.params.partyOrderId;
     const rTableId = req.params.id;
@@ -471,6 +472,7 @@ router.patch('/rTables/:id/partyOrders/:partyOrderId/close', async (req, res) =>
 
 // ---------- Order Food ---------- //
 
+// Create an order
 router.post('/orderFoods', async (req, res) => {
     const orderFoods = req.body.orderFoods;
 

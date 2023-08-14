@@ -18,6 +18,7 @@ function Root() {
   const [partyTotal, setPartyTotal] = useState(0);
   const [isOrderStarted, setIsOrderStarted] = useState(false);
   const [tableHasPartyOrder, setTableHasPartyOrder] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [currentUser, setCurrentU] = useState({});
 
   const handleTableClick = (tableId) => {
@@ -229,11 +230,11 @@ function Root() {
   
   return (
     <div>
- <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
-  <img className="h-40 mx-10" src="/logo.png" alt="Runner Logo"></img>
-  <div>
-    <h2 className="text-5xl text-red-600">{currentUser.name}</h2> 
-  </div>
+      <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
+        <img className="h-40 mx-10" src="/logo.png" alt="Runner Logo"></img>
+        <div>
+          <h2 className="text-5xl text-red-600">{currentUser.name}</h2>
+        </div>
 
   <div className="flex flex-col items-center justify-center mx-10 text-lg">
     <div className="flex space-x-4">
@@ -254,11 +255,6 @@ function Root() {
     <div className="mt-4">{realTime.toLocaleString()}</div>
   </div>
 </nav>
-
-
-
-
-
 
 
       <div className="grid grid-cols-6 gap-4 m-4 ">
