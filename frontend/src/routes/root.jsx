@@ -212,7 +212,7 @@ function Root() {
       <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
         <img className="h-40 mx-10" src="/logo.png" alt="Runner Logo"></img>
         <div>
-          <h2 className="text-5xl text-red-600">{AuthContext.name}</h2>
+          <h2 className="text-5xl text-red-600">{AuthContext.rName}</h2>
         </div>
 
         <div className="flex flex-col items-center justify-center mx-10 text-lg">
