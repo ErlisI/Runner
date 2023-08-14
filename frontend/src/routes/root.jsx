@@ -1,47 +1,29 @@
 // import React from 'react';
 import { useEffect, useContext, useState } from "react";
-import { useNavigation, useLoaderData, Form } from "react-router-dom";
+import { useNavigation, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import First from "../threesrctors/first";
 import Second from "../threesrctors/second";
 import Third from "../threesrctors/third";
 
 // eslint-disable-next-line no-unused-vars, react-refresh/only-export-components
-export async function loader({ request }) {
-  const response = await fetch("/api/auth/current_user");
-  const tablesrespond = await fetch("/api/restaurant/rTables");
-  const foodCategoriesRespond = await fetch("/api/restaurant/foodCategories");
-
-  const fCategories = await foodCategoriesRespond.json();
-  const tables = await tablesrespond.json();
-  if (response.ok) {
-    const { user } = await response.json();
-    return { currentUser: user, tables, fCategories };
-  }
-  return { currentUser: null };
-}
 
 function Root() {
-  const { currentUser } = useLoaderData();
   const { setCurrentUser } = useContext(AuthContext);
   const navigation = useNavigation();
+  
   const [selectedTableId, setSelectedTableId] = useState(null);
   const [partyOrderId, setPartyOrderId] = useState(null);
   const [orderedFood, setOrderedFood] = useState(null);
   const [partyTotal, setPartyTotal] = useState(0);
   const [isOrderStarted, setIsOrderStarted] = useState(false);
   const [tableHasPartyOrder, setTableHasPartyOrder] = useState(false);
-
+  const [currentUser, setCurrentU] = useState({});
 
   const handleTableClick = (tableId) => {
     setSelectedTableId(tableId);
   };
-
-
-  useEffect(() => {
-    setCurrentUser(currentUser);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -126,7 +108,7 @@ function Root() {
       return null;
     }
   };
-
+  
   const handleStartOrder = () => {
     const apiEndpoint = `/api/restaurant/rTables/${selectedTableId}/partyOrders`;
   
@@ -144,8 +126,11 @@ function Root() {
       })
       .then((data) => {
         if (data.open) {
-          handleOrderToggleStart();
-          handleHasTablePartyOrder();
+          setOrderedFood([]);
+          setPartyTotal(0);
+          setPartyOrderId(data.id);
+          setIsOrderStarted(true);
+          setTableHasPartyOrder(true);
         } else {
           console.log("Order is not open.");
         }
@@ -179,6 +164,7 @@ function Root() {
 
   useEffect(() => {
     handleGetOrder();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTableId]);
 
 
@@ -192,6 +178,10 @@ function Root() {
     setIsOrderStarted(false);
     handleCloseOrder();
   };
+
+  const handleHasTablePartyOrder = () => {
+    setTableHasPartyOrder(true);
+  }
 
   //present the food on real time with the updated price and total price
   const handleFoodAdded = (newFoods) => {
@@ -215,28 +205,61 @@ function Root() {
     const newPartyTotal = updatedFood.reduce((total, food) => total + (food.price * food.quantity), 0);
     setPartyTotal(newPartyTotal);
   };
-  
-  const handleHasTablePartyOrder = () => {
-    setTableHasPartyOrder(true);
-  }
 
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        // Fetch the current user from API
+        const response = await fetch("/api/auth/current_user");
+        const { user } = await response.json();
+        
+        // Update the currentUser state
+        setCurrentU(user);
+      } catch (error) {
+        console.error(error);
+        setCurrentU(null); // Fix the typo here from setCurrentU to setCurrentUser
+      }
+    };
+  
+    // Call the function to fetch the current user when the component mounts
+    fetchCurrentUser();
+  }, []);
+  
+  
   return (
     <div>
-      <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
-        <img className="h-40 mx-10" src="/logo.png" alt="Runner Logo"></img>
-        <div>
-          <h2 className="text-5xl text-red-600">{currentUser.name}</h2>
-        </div>
+ <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-[#f1f1f1] shadow-md shadow-black/5 ">
+  <img className="h-40 mx-10" src="/logo.png" alt="Runner Logo"></img>
+  <div>
+    <h2 className="text-5xl text-red-600">{currentUser.name}</h2> 
+  </div>
 
-        <div className="flex flex-col items-center justify-center mx-10 text-lg">
-          <Form onSubmit={handleLogout}>
-            <button className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mt-4 rounded-full border border-red-600">
-              Logout
-            </button>
-          </Form>
-          <div className="mt-4">{realTime.toLocaleString()}</div>
-        </div>
-      </nav>
+  <div className="flex flex-col items-center justify-center mx-10 text-lg">
+    <div className="flex space-x-4">
+      <button className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mt-4 rounded-full border border-red-600">
+        <Link to="/report">
+          Reports
+        </Link>
+      </button>
+    
+      <button
+        className="bg-white hover:bg-red-600 hover:border-red-600 hover:text-white text-red-600 font-bold py-1 px-6 mt-4 rounded-full border border-red-600"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
+    </div>
+    
+    <div className="mt-4">{realTime.toLocaleString()}</div>
+  </div>
+</nav>
+
+
+
+
+
+
 
       <div className="grid grid-cols-6 gap-4 m-4 ">
         <div className="w-auto p-2 rounded col-span-1">
@@ -254,6 +277,7 @@ function Root() {
             isOrderStarted={isOrderStarted}
             handleOrderToggle={handleOrderToggleStart}
             handleFoodAdded={handleFoodAdded}
+            selectedTableId={selectedTableId}
             tableHasPartyOrder={tableHasPartyOrder}
           />
         </div>
