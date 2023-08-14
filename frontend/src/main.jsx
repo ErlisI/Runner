@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/root";
+import Report from "./routes/report"
 import Login from "./auth/LoginForm";
 import SignUp from "./auth/SignupForm";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -34,7 +35,15 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     errorElement: <ErrorPage />,
-   
+  },
+  {
+    path: "/report",
+    element: (
+      <ProtectedRoute>
+        <Report />
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorPage />,
   },
 ]);
 
