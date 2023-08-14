@@ -53,11 +53,9 @@ function Root() {
     }
   })();
 
-
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
 
   useEffect(() => {
     (async function () {
