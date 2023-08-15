@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { authenticateUser } = require("../middleware/auth");
 const { ForbiddenError, NotFoundError } = require("../errors");
-const { Restaurant, rTable, Food, FoodCategory, Party_Order, Order_Food } = require("../models");
+const { Restaurant, rTable, Food, FoodCategory, Party_Order, Order_Food, DailyReport } = require("../models");
+const { Op } = require('sequelize');
+const { exportDailyReportsToExcel } = require("./excelExport")
 
 const getRTable = async (id) => {
     const table = await rTable.findByPk(parseInt(id, 10));
@@ -368,11 +370,11 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
 
     try {
         const partyOrder = await Party_Order.findOne({
-            where: { 
-                rTableId, 
-                open: true 
+            where: {
+                rTableId,
+                open: true
             },
-            
+
             include: [
                 {
                     model: Food,
@@ -399,6 +401,7 @@ router.get('/partyOrders/:rTableId', async (req, res) => {
 // Create a new party order
 router.post('/rTables/:id/partyOrders', async (req, res) => {
     const rTableId = req.params.id;
+    const rUser = req.session.userId;
 
     try {
 
@@ -419,6 +422,7 @@ router.post('/rTables/:id/partyOrders', async (req, res) => {
             date: new Date(),
             Total: 0,
             rTableId: rTableId,
+            RestaurantId: rUser,
             open: true,
         });
 
@@ -449,6 +453,37 @@ router.patch('/rTables/:id/partyOrders/:partyOrderId/close', async (req, res) =>
 
         // Update the 'open' status to false
         await partyOrder.update({ open: false });
+
+        // Find the corresponding daily report based on the party order's date
+        const partyOrderDate = new Date(partyOrder.createdAt);
+        const startOfDay = new Date(partyOrderDate.getFullYear(), partyOrderDate.getMonth(), partyOrderDate.getDate());
+        const endOfDay = new Date(partyOrderDate.getFullYear(), partyOrderDate.getMonth(), partyOrderDate.getDate() + 1);
+        
+        const dailyReport = await DailyReport.findOne({
+            where: {
+                RestaurantId: partyOrder.RestaurantId,
+                date: {
+                    [Op.gte]: startOfDay,
+                    [Op.lt]: endOfDay,
+                },
+            },
+        });
+
+        if (dailyReport) {
+            // Update the 'partyOrderTotal' in the daily report by adding the 'total' from the party order
+            dailyReport.partyOrderTotal += partyOrder.Total;
+            dailyReport.netProfit = dailyReport.partyOrderTotal - (dailyReport.eCost + dailyReport.sCost);
+            await dailyReport.save();
+
+            // Export daily reports to Excel
+            const dailyReports = await DailyReport.findAll({
+                where: {
+                    RestaurantId: dailyReport.RestaurantId,
+                },
+            });
+
+            await exportDailyReportsToExcel(dailyReports, dailyReport.RestaurantId);
+        }
 
         res.status(200).json({ message: 'Party order closed successfully' });
     } catch (err) {
@@ -519,6 +554,132 @@ router.post('/orderFoods', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error occurred while creating order foods', error: err });
+    }
+});
+
+
+// ---------- Daily Report ---------- //
+
+const createDailyReport = async (restaurantId, date) => {
+    try {
+        const newReport = await DailyReport.create({
+            RestaurantId: restaurantId,
+            date: date,
+            eCost: 0,
+            sCost: 0,
+            partyOrderTotal: 0,
+            netProfit: 0,
+        });
+
+        // Collect daily reports for export
+        const dailyReports = await DailyReport.findAll({
+            where: {
+                RestaurantId: restaurantId,
+            },
+        });
+
+        // Export daily reports to Excel
+        await exportDailyReportsToExcel(dailyReports, restaurantId);
+
+        console.log(`Daily report created for RestaurantId ${restaurantId} on ${date}:`, newReport);
+    } catch (error) {
+        console.error('Error creating daily report:', error.message);
+    }
+};
+
+const scheduleDailyReportsForRestaurants = async () => {
+    try {
+        const restaurants = await Restaurant.findAll(); // Fetch all restaurants from your database
+
+        for (const restaurant of restaurants) {
+            const now = new Date();
+            const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            
+            const existingReport = await DailyReport.findOne({
+                where: {
+                    RestaurantId: restaurant.id,
+                    date: scheduledTime,
+                },
+            });
+
+            if (!existingReport) {
+                await createDailyReport(restaurant.id, scheduledTime);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching restaurants:', error.message);
+    }
+};
+
+router.post("/dailyReports", authenticateUser, async (req, res) => {
+    const now = new Date();
+    const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    
+    const existingReport = await DailyReport.findOne({
+        where: {
+            RestaurantId: req.user.RestaurantId,
+            date: scheduledTime,
+        },
+    });
+
+    if (!existingReport) {
+        createDailyReport(req.user.RestaurantId, scheduledTime);
+    }
+    
+    return res.status(201).json({ message: 'Daily report creation initiated' });
+});
+
+// Start scheduling the daily reports for each restaurant
+scheduleDailyReportsForRestaurants();
+
+
+router.patch('/dailyReports/:restaurantId', authenticateUser, async (req, res) => {
+    const restaurantId = req.params.restaurantId;
+    const { eCost, sCost } = req.body;
+
+    try {
+        // Find the daily report by ID
+        const dailyReport = await DailyReport.findOne({
+            where: {
+                RestaurantId: restaurantId,
+                date: {
+                    [Op.gte]: new Date().setHours(0, 0, 0, 0),
+                    [Op.lt]: new Date().setHours(24, 0, 0, 0),
+                },
+            },
+        });
+
+        if (!dailyReport) {
+            return res.status(404).json({ message: 'Daily report not found' });
+        }
+
+        // Update the eCost and sCost fields
+        if (eCost !== undefined) {
+            dailyReport.eCost = eCost;
+        }
+
+        if (sCost !== undefined) {
+            dailyReport.sCost = sCost;
+        }
+
+        // Calculate the netProfit based on the updated eCost and sCost
+        dailyReport.netProfit = dailyReport.partyOrderTotal - (dailyReport.eCost + dailyReport.sCost);
+
+        // Save the changes
+        await dailyReport.save();
+
+        const dailyReports = await DailyReport.findAll({
+            where: {
+                RestaurantId: restaurantId,
+            },
+        });
+
+        await exportDailyReportsToExcel(dailyReports, restaurantId);
+
+        res.status(200).json({ message: 'Daily report updated successfully', dailyReport });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error occurred while updating daily report', error: err });
     }
 });
 

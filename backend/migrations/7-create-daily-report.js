@@ -28,6 +28,9 @@ module.exports = {
       sCost: {
         type: Sequelize.INTEGER
       },
+      partyOrderTotal: {
+        type: Sequelize.INTEGER
+      },
       netProfit: {
         type: Sequelize.INTEGER
       },

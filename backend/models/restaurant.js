@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasOne(models.DailyReport);
       this.hasMany(models.FoodCategory);
       this.hasMany(models.rTable);
+      this.hasMany(models.Party_Order);
     }
   }
   Restaurant.init({
