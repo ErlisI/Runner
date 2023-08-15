@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     date: DataTypes.DATE,
     eCost: DataTypes.INTEGER,
     sCost: DataTypes.INTEGER,
+    partyOrderTotal: DataTypes.INTEGER,
     netProfit: DataTypes.INTEGER
   }, {
     sequelize,

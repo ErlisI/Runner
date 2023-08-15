@@ -25,6 +25,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      RestaurantId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "restaurants",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       date: {
         type: Sequelize.DATE
       },

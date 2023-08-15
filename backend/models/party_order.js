@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Party_Order extends Model {
     
     static associate(models) {
+      this.belongsTo(models.Restaurant),
       this.belongsTo(models.rTable),
       this.belongsToMany(models.Food, {
         through: "Order_Food",
@@ -16,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     Total: DataTypes.INTEGER,
     open: DataTypes.BOOLEAN,
     rTableId: DataTypes.INTEGER,
+    RestaurantId: DataTypes.INTEGER,
     date: DataTypes.DATE
   }, {
     sequelize,

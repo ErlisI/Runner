@@ -97,6 +97,7 @@ module.exports = {
         {
           Total: 100,
           rTableId: rtablesId,
+          RestaurantId: restaurantId,
           open: true,
           date: new Date(),
           createdAt: new Date(),

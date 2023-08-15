@@ -1,7 +1,35 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const { Restaurant } = require("../models");
+const { Restaurant, DailyReport } = require("../models");
+
+//to create a dailyReport when a new user is created
+const createDailyReport = async (restaurantId, date) => {
+  try {
+      const newReport = await DailyReport.create({
+          RestaurantId: restaurantId,
+          date: date,
+          eCost: 0,
+          sCost: 0,
+          partyOrderTotal: 0,
+          netProfit: 0,
+      });
+
+      // Collect daily reports for export
+      const dailyReports = await DailyReport.findAll({
+          where: {
+              RestaurantId: restaurantId,
+          },
+      });
+
+      // Export daily reports to Excel
+      await exportDailyReportsToExcel(dailyReports, restaurantId);
+
+  } catch (error) {
+      console.error('Error creating daily report:', error.message);
+  }
+};
+
 
 router.get("/current_user", async (req, res) => {
   if (req.session.userId) {
@@ -43,6 +71,21 @@ router.post("/signup", async (req, res) => {
       email: req.body.email,
       password: hashedPassword,
     });
+
+
+    const now = new Date();
+    const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    const existingReport = await DailyReport.findOne({
+        where: {
+            RestaurantId: rUser.id,
+            date: scheduledTime,
+        },
+    });
+
+    if (!existingReport) {
+        await createDailyReport(rUser.id, scheduledTime);
+    }
+
 
     req.session.userId = rUser.id;
     res.status(201).json({
