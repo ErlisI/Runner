@@ -4,7 +4,7 @@ const port = 4000;
 const session = require("express-session");
 require("dotenv").config();
 const cors = require("cors");
-console.log(require("crypto").randomBytes(64).toString("hex"));
+
 const authRouter = require("./routes/auth");
 const restaurantRouter = require("./routes/restaurant");
 const {
