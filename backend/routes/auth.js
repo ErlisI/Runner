@@ -19,16 +19,24 @@ router.get("/current_user", async (req, res) => {
   }
 });
 
-router.post("/signup", async (req, res) => {
 
-  
+router.post("/signup", async (req, res) => {
   console.log("Request Body:", req.body);
 
-  
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
   try {
-    
+    // Check if the user already exists by searching for their email
+    const existingUser = await Restaurant.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ message: "Account already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
     const rUser = await Restaurant.create({
       username: req.body.username,
       rName: req.body.rName,
@@ -37,7 +45,6 @@ router.post("/signup", async (req, res) => {
     });
 
     req.session.userId = rUser.id;
-    // Send a response to the client informing them that the user was successfully created
     res.status(201).json({
       message: "Restaurant User created!",
       user: {
@@ -56,6 +63,7 @@ router.post("/signup", async (req, res) => {
     });
   }
 });
+
 
 router.delete("/logout", (req, res) => {
   req.session.destroy((err) => {
@@ -86,7 +94,6 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(req.body.password, rUser.password, (error, result) => {
       if (result) {
         // Passwords match
-
         req.session.userId = rUser.id;
         res.status(200).json({
           message: "Logged in successfully",

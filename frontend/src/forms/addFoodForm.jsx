@@ -14,6 +14,11 @@ export default function AddFoodForm({ hModal, fCategories }) {
     const name = e.target.name;
     const value = e.target.value;
 
+    if (name === "price" && (isNaN(value) || parseFloat(value) <= 0)) {
+      console.log("No No No");
+      return;
+    }
+
     setFoodData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -45,7 +50,6 @@ export default function AddFoodForm({ hModal, fCategories }) {
   return (
     <div>
       <form
-        //onSubmit={handleAddJobFormSubmit}
         className="selection:bg-blue-200 flex flex-col gap-2 text-center"
       >
         <h1 className="text-3xl">Add a Food!</h1>
@@ -93,8 +97,7 @@ export default function AddFoodForm({ hModal, fCategories }) {
             </select>
           </fieldset>
         ) : (
-          // Show a loading state or alternative message if fCategories is empty
-          <p>Loading food categories...</p>
+          console.log("Nothing to see here")
         )}
 
         <input
