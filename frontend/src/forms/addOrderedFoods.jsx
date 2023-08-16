@@ -45,6 +45,7 @@ export default function AddFoodForm({ hModal, foods, partyOrderId, handleFoodAdd
 
         if (selectedFood) {
           selectedFoods.push({
+            foodId: selectedFood.id,
             name: selectedFood.name,
             price: selectedFood.price,
             quantity: foodQuantities[foodId],
