@@ -5,26 +5,26 @@ import { AuthContext } from "../context/AuthContext";
 export default function SignupForm() {
   const { currentUser, signup } = useContext(AuthContext);
   const [username, setUsername] = useState("");
-  const [restaurantName, setRestaurantName] = useState("");
+  const [rName, setRestaurantName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   if (currentUser) {
-    return <Navigate to="/user" />;
+    return <Navigate to="/login" />;
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const credentials = {
       username,
-      restaurantName,
+      rName,
       email,
       password,
     };
     await signup(credentials);
   };
 
-  const isFormValid = username !== "" && restaurantName !== "" && email !== "" && password !== "";
+  const isFormValid = username !== "" && rName !== "" && email !== "" && password !== "";
 
   return (
     <div className="flex items-center justify-center h-screen font-serif">
@@ -63,7 +63,7 @@ export default function SignupForm() {
                   id="rName"
                   type="text"
                   name="rName"
-                  value={restaurantName}
+                  value={rName}
                   onChange={(e) => setRestaurantName(e.target.value)}
                   className="bg-white border-4 border-gray-950 focus:outline-none p-2"
                 />

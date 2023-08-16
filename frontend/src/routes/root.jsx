@@ -18,7 +18,6 @@ function Root() {
   const [partyTotal, setPartyTotal] = useState(0);
   const [isOrderStarted, setIsOrderStarted] = useState(false);
   const [tableHasPartyOrder, setTableHasPartyOrder] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [currentUser, setCurrentU] = useState({});
 
   const handleTableClick = (tableId) => {
@@ -86,12 +85,14 @@ function Root() {
 
       const partyOrder = await response.json();
       console.log(partyOrder);
+      
       if (partyOrder) {
         setPartyOrderId(partyOrder.id);
         setPartyTotal(partyOrder.Total);
         setIsOrderStarted(partyOrder.open);
         setOrderedFood(
           partyOrder.Food.map((food) => ({
+            foodId: food.id,
             price: food.price,
             name: food.name,
             quantity: food.Order_Food.Quantity,
@@ -210,6 +211,15 @@ function Root() {
     setPartyTotal(newPartyTotal);
   };
 
+  const handleFoodRemoved = (foodToRemove) => {
+    const updatedFood = orderedFood.filter(existingFood => existingFood.name !== foodToRemove.name);
+  
+    setOrderedFood(updatedFood);
+  
+    const newPartyTotal = updatedFood.reduce((total, food) => total + (food.price * food.quantity), 0);
+    setPartyTotal(newPartyTotal);
+  };
+
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -230,6 +240,7 @@ function Root() {
     fetchCurrentUser();
   }, []);
 
+  console.log(orderedFood);
 
   return (
     <div>
@@ -274,8 +285,7 @@ function Root() {
       </nav>
 
 
-
-      <div className="grid grid-cols-6 gap-4 m-4 ">
+      <div className="grid grid-cols-7 gap-4 m-4 ">
         <div className="w-auto p-2 rounded col-span-1">
           <h1 className="text-2xl text-center mt-2">Tables</h1>
           <hr className="mt-4 mb-10 w-full border-solid border-t-2 border-gray-300" />
@@ -295,7 +305,7 @@ function Root() {
             tableHasPartyOrder={tableHasPartyOrder}
           />
         </div>
-        <div className="w-auto p-2 rounded col-span-1">
+        <div className="w-auto p-2 rounded col-span-2">
           <div className="grid grid-cols-3 mt-4">
             <h1 className="mx-auto col-span-1">Item</h1>
             <h1 className="mx-auto col-span-1">Quantity</h1>
@@ -308,6 +318,8 @@ function Root() {
             isOrderStarted={isOrderStarted}
             handleOrderToggleClose={handleOrderToggleClose}
             tableHasPartyOrder={tableHasPartyOrder}
+            handleFoodRemoved={handleFoodRemoved}
+            partyOrderId={partyOrderId}
           />
         </div>
       </div>
