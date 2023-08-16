@@ -557,9 +557,55 @@ router.post('/orderFoods', async (req, res) => {
     }
 });
 
+//deleting an order
+router.delete('/orderFoods', async (req, res) => {
+    const orderFoods = req.body.orderFoods;
+  
+    try {
+      for (const { FoodId, PartyOrderId } of orderFoods) {
+        const orderFood = await Order_Food.findOne({
+          where: {
+            FoodId: FoodId,
+            PartyOrderId: PartyOrderId,
+          },
+        });
+  
+        if (!orderFood) {
+          return res.status(404).json({ message: 'Order food not found' });
+        }
+  
+        await orderFood.destroy();
+      }
+  
+      res.status(200).json({ message: 'Order foods deleted successfully' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error occurred while deleting order foods', error: err });
+    }
+  });  
+  
 
 // ---------- Daily Report ---------- //
 
+// Get all dailyReports data for a specific RestaurantId
+router.get('/dailyReports/:restaurantId', async (req, res) => {
+    const { restaurantId } = req.params;
+  
+    try {
+      const dailyReports = await DailyReport.findAll({
+        where: {
+          RestaurantId: restaurantId,
+        },
+      });
+  
+      res.status(200).json(dailyReports);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching dailyReports data', error: error });
+    }
+  });
+
+//post a dailyReport every day
 const createDailyReport = async (restaurantId, date) => {
     try {
         const newReport = await DailyReport.create({
