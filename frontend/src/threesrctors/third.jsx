@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-export default function Third({ orderedFood, partyTotal, isOrderStarted, handleOrderToggleClose, tableHasPartyOrder}) {
+export default function Third({ orderedFood, partyTotal, isOrderStarted, handleOrderToggleClose, tableHasPartyOrder }) {
+
   return (
     <div className="flex flex-col h-[80vh] py-15 shadow-md shadow-black/5">
       <div className="">
         {isOrderStarted && orderedFood && tableHasPartyOrder ? (
           orderedFood.map((order, index) => (
-            <div key={index} className="grid grid-cols-3">
+            <div key={index} className="grid grid-cols-3 text-xl">
               <h1 className="mx-auto mb-2 col-span-1">{order.name}</h1>
               <h1 className="mx-auto mb-2 col-span-1">{order.quantity}</h1>
               <h1 className="mx-auto mb-2 col-span-1">
