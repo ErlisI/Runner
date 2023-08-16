@@ -39,11 +39,11 @@ export default function Third({
             <div key={index} className="flex text-xl mb-2">
               <h1 className="mx-auto">{order.name}</h1>
               <h1 className="mx-auto">{order.quantity}</h1>
-              <h1 className="mx-auto">
+              <h1 className="mr-8 pl-16">
                 ${order.price * order.quantity}
               </h1>
               <button
-                className="text-red-500 hover:red-red-800 mr-3"
+                className="text-red-500 hover:red-red-800 mr-2"
                 onClick={() => {
                   console.log("Clicked on order:", order); // Log the order details
                   handleFoodRemoval(order);
