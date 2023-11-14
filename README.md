@@ -41,15 +41,11 @@ Contributors are expected to follow standard coding style guidelines.
 Runner is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Contributors
-Special thanks and credit to the main contributors for the project:
+Special thanks and credit to the main contributors to the project:
 - ErlisI (GitHub: [@ErlisI](https://github.com/ErlisI))
 - AleksandrosD (GitHub: [@AleksandrosD](https://github.com/AleksandrosD))
 - BrianShehu123 (GitHub: [@BrianShehu123](https://github.com/BrianShehu123))
 - Asbern3333 (GitHub: [@Asbern3333](https://github.com/Asbern3333))
 
 ---
-
-
-
-https://github.com/ErlisI/Runner/assets/63165733/42606528-c982-4179-bb07-aa82cbed459d
-
+https://github.com/ErlisI/Runner/assets/63165733/01de6bed-1a92-4d20-b541-5f8994d2c895
