@@ -48,4 +48,8 @@ Special thanks and credit to the main contributors to the project:
 - Asbern3333 (GitHub: [@Asbern3333](https://github.com/Asbern3333))
 
 ---
-https://github.com/ErlisI/Runner/assets/63165733/01de6bed-1a92-4d20-b541-5f8994d2c895
+
+
+https://github.com/ErlisI/Runner/assets/63165733/64d0dd64-b3b4-435f-9138-648efccf7f14
+
+
